@@ -1,20 +1,35 @@
 package br.com.sonikro.coliseum.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import org.jboss.logging.Logger;
 
-public class GenericDAO<Type>{
-	@PersistenceContext(name="coliseum")
+@Named("genericDAO")
+public class GenericDAO<Type> implements Serializable{
+	private static Logger logger = Logger.getLogger(GenericDAO.class);
+	@Inject
 	protected EntityManager manager;
-	private Class<?> objectClass;;
 
-	public GenericDAO(EntityManager manager, Class<Type> entityClass)
+	private Class<?> objectClass;;
+	
+	public GenericDAO(Class<Type> objectClass)
 	{
-		this.manager = manager;
-		this.objectClass = entityClass;
+		logger.info("Instantiating GenericDAO class constructor");
+		this.objectClass = objectClass;
+		//this.manager = manager;
+		//this.objectClass = (Class<Type>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	}
+	
+	public GenericDAO(EntityManager em, Class<Type> objectClass)
+	{
+		this(objectClass);
+		this.manager = em;
 	}
 	
 	public void insert(Type persistentObject)
@@ -33,8 +48,9 @@ public class GenericDAO<Type>{
 		manager.remove(persistentObject);
 	}
 	
-	public Type find(Integer id)
+	public Type find(Object id)
 	{
+		logger.info("GenericDAO<"+objectClass.getName()+"> -> FIND : "+id);
 		return (Type) manager.find(objectClass, id);
 	}
 	

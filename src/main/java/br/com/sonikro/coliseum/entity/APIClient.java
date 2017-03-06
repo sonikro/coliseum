@@ -1,4 +1,4 @@
-package br.com.sonikro.coliseum.model;
+package br.com.sonikro.coliseum.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

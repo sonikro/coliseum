@@ -13,6 +13,7 @@ import org.jboss.logging.Logger;
 public class EntityManagerProducer {
 	private static Logger logger = Logger.getLogger(EntityManagerProducer.class);
 	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("coliseum");
+	
 	@Produces @RequestScoped
 	public EntityManager getEntityManager()
 	{

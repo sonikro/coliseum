@@ -1,4 +1,4 @@
-package br.com.sonikro.coliseum.security;
+package br.com.sonikro.coliseum.filters;
 
 import java.io.IOException;
 

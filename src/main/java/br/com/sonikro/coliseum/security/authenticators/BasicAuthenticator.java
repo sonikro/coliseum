@@ -12,7 +12,7 @@ import javax.xml.bind.DatatypeConverter;
 import org.jboss.logging.Logger;
 
 import br.com.sonikro.coliseum.dao.GenericDAO;
-import br.com.sonikro.coliseum.model.APIClient;
+import br.com.sonikro.coliseum.entity.APIClient;
 
 @Model
 public class BasicAuthenticator implements IRequestAuthenticator{

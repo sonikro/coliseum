@@ -56,6 +56,6 @@ public class GenericDAO<Type> implements Serializable{
 	
 	public List<Type> list()
 	{
-		return (List<Type>) this.manager.createQuery("select c from "+ objectClass.getName()+"  c", objectClass).getResultList();
+		return (List<Type>) this.manager.createQuery("select c from "+ objectClass.getSimpleName()+"  c", objectClass).getResultList();
 	}
 }

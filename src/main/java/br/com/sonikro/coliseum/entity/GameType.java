@@ -1,9 +1,12 @@
 package br.com.sonikro.coliseum.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class GameType {
@@ -11,7 +14,16 @@ public class GameType {
 	private Long id;
 	private Integer max_rost_number; //Max number of players in a Team of this GameType
 	private Integer number_of_players; //Number of players needed for a match
+	@OneToMany(mappedBy="gameType")
+	private List<GameTypeLineup> lineup;
 	
+	
+	public List<GameTypeLineup> getLineup() {
+		return lineup;
+	}
+	public void setLineup(List<GameTypeLineup> lineup) {
+		this.lineup = lineup;
+	}
 	public Long getId() {
 		return id;
 	}

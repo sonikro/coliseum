@@ -2,6 +2,7 @@ package br.com.sonikro.coliseum.entity;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,13 +15,17 @@ import br.com.sonikro.coliseum.connections.RCONConnection;
 public class Server {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable=false)
 	private String ip;
+	@Column(nullable=false)
 	private Integer port;
+	@Column(nullable=false)
 	private String rcon_password;
 	private Integer sourcetv_port;
 	private String sourcetv_password;
 	private String hostname;
 	private Boolean maintenance_mode;
+	@Column(nullable=false)
 	private Integer number_of_slots;
 	private String ftp_user;
 	private Integer ftp_port;

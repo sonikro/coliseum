@@ -13,7 +13,7 @@ import br.com.sonikro.coliseum.connections.RCONConnection;
 @Entity
 public class Server {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	private String ip;
 	private Integer port;
 	private String rcon_password;
@@ -37,10 +37,10 @@ public class Server {
 	public void setMaps(List<Map> maps) {
 		this.maps = maps;
 	}
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getIp() {

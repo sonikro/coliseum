@@ -25,7 +25,9 @@ public class ServerResource {
 	@Path("/{serverId}")
 	public Server getServer(@PathParam("serverId") Integer serverId)
 	{
-		return serverDAO.find(serverId);
+		Server server = serverDAO.find(serverId);
+		server.setRcon_password("*****");
+		return server;
 	}
 	
 	@GET
@@ -63,4 +65,24 @@ public class ServerResource {
 		
 		serverDAO.delete(server);
 	}
+	
+	@GET
+	@Path("/rcon_command/{serverId}/{rconCommand}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String executeRconCommand(@PathParam("serverId") Integer serverId,
+										@PathParam("rconCommand") String command) throws Exception
+	{
+		Server server = serverDAO.find(serverId);
+		
+		RCONConnection connection = server.getRCONConnection();
+		
+		connection.open();
+		
+		String result = connection.executeCmd(command);
+		
+		connection.close();
+		
+		return result;
+	}
+	
 }

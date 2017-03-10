@@ -22,9 +22,12 @@ public class BasicAuthenticator implements IRequestAuthenticator{
 	
 	private static Logger logger = Logger.getLogger(BasicAuthenticator.class);
 	
-	@Inject @Named("genericDAO")
 	private GenericDAO<APIClient> dao;
 	
+	public  BasicAuthenticator(GenericDAO dao) {
+		this.dao = dao;
+		this.dao.setObjectClass(APIClient.class);
+	}
 
 	@Override
 	public void authenticateRequest(ContainerRequestContext requestContext) throws RequestAuthenticationException {

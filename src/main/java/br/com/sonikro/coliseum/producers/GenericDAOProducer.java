@@ -18,14 +18,20 @@ import br.com.sonikro.coliseum.dao.GenericDAO;
 public class GenericDAOProducer {
 	private static Logger logger = Logger.getLogger(GenericDAOProducer.class);
 	
-	@Inject
-	private Instance<EntityManager> cdiInstanceEM;
+	/*@Inject
+	private Instance<EntityManager> cdiInstanceEM;*/
 	@Produces @Named("genericDAO")
-	public <T> GenericDAO<T> produceGenericDAO(InjectionPoint injectionPoint)
+	public <T> GenericDAO<T> produceGenericDAO(InjectionPoint injectionPoint, EntityManager manager)
 	{
-		logger.info("CDI Producing GenericDAO");
-		ParameterizedType type = (ParameterizedType) injectionPoint.getType();
-		Class objectClass = (Class) type.getActualTypeArguments()[0];
-		return new GenericDAO<>(cdiInstanceEM.get(),objectClass);
+		try {
+			ParameterizedType type = (ParameterizedType) injectionPoint.getType();
+			Class objectClass = (Class) type.getActualTypeArguments()[0];
+			logger.info("CDI Producing GenericDAO<"+objectClass.getSimpleName()+">");
+			return new GenericDAO<>(manager,objectClass);
+		} catch (Exception e) {
+			return new GenericDAO(manager);
+		}
+		
+		
 	}
 }

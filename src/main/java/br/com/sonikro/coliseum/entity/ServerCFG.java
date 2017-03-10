@@ -43,5 +43,10 @@ public class ServerCFG {
 		this.gameType = gameType;
 	}
 	
+	@Override
+	public String toString() {
+		return "TO-DO";
+	}
+	
 	
 }

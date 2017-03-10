@@ -4,12 +4,17 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import org.hibernate.annotations.ColumnTransformer;
+
 import br.com.sonikro.coliseum.connections.RCONConnection;
+import br.com.sonikro.coliseum.enumerators.ServerStatus;
 
 @Entity
 public class Server {
@@ -19,18 +24,24 @@ public class Server {
 	private String ip;
 	@Column(nullable=false)
 	private Integer port;
-	@Column(nullable=false)
+	@ColumnTransformer(
+	        read =  "pgp_sym_decrypt(rcon_password::bytea,current_setting('encrypt.key')::text)",
+	        write = "pgp_sym_encrypt(?::text,current_setting('encrypt.key')::text)"
+	    )
+	@Column(columnDefinition = "bytea")
 	private String rcon_password;
-	private Integer sourcetv_port;
+	private Integer sourcetv_port;	
 	private String sourcetv_password;
 	private String hostname;
-	private Boolean maintenance_mode;
+	@Enumerated(EnumType.STRING)
+	private ServerStatus status;
 	@Column(nullable=false)
 	private Integer number_of_slots;
 	private String ftp_user;
 	private Integer ftp_port;
 	private String ftp_password;
 	private String server_password;
+	
 	
 	@ManyToMany
 	private List<Map> maps;
@@ -84,11 +95,12 @@ public class Server {
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
 	}
-	public Boolean getMaintenance_mode() {
-		return maintenance_mode;
+	
+	public ServerStatus getStatus() {
+		return status;
 	}
-	public void setMaintenance_mode(Boolean maintenance_mode) {
-		this.maintenance_mode = maintenance_mode;
+	public void setStatus(ServerStatus status) {
+		this.status = status;
 	}
 	public Integer getNumber_of_slots() {
 		return number_of_slots;

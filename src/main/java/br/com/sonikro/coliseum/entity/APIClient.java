@@ -5,11 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.ColumnTransformer;
+
 @Entity
 public class APIClient {
 
 	@Id
 	private String username;
+	@ColumnTransformer(	
+	        read =  "pgp_sym_decrypt(password::bytea, current_setting('encrypt.key')::text)",
+	        write = "pgp_sym_encrypt(?::text,current_setting('encrypt.key')::text) "
+	    )
+	@Column(columnDefinition = "bytea")	
 	private String password;
 	private String hostname;
 	

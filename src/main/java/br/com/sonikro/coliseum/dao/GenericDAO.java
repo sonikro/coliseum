@@ -16,7 +16,12 @@ public class GenericDAO<Type> implements Serializable{
 	@Inject
 	protected EntityManager manager;
 
-	private Class<?> objectClass;;
+	private Class<?> objectClass;
+	
+	public GenericDAO(EntityManager em)
+	{
+		this.manager = em;
+	}
 	
 	public GenericDAO(Class<Type> objectClass)
 	{
@@ -24,6 +29,11 @@ public class GenericDAO<Type> implements Serializable{
 		this.objectClass = objectClass;
 		//this.manager = manager;
 		//this.objectClass = (Class<Type>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	}
+	
+	public void setObjectClass(Class objectClass)
+	{
+		this.objectClass = objectClass;
 	}
 	
 	public GenericDAO(EntityManager em, Class<Type> objectClass)

@@ -14,10 +14,17 @@ public class GameType {
 	private Long id;
 	private Integer max_rost_number; //Max number of players in a Team of this GameType
 	private Integer number_of_players; //Number of players needed for a match
+	private String name;
 	@OneToMany(mappedBy="gameType")
 	private List<GameTypeLineup> lineup;
 	
 	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public List<GameTypeLineup> getLineup() {
 		return lineup;
 	}

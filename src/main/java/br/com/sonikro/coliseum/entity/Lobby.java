@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +19,7 @@ import br.com.sonikro.coliseum.enumerators.LobbyStatus;
 public class Lobby {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Server server;
 	@ManyToOne
 	private GameType gameType;
@@ -26,7 +29,7 @@ public class Lobby {
 	private List<LobbyUser> users = new ArrayList<LobbyUser>();
 	@OneToMany(mappedBy="lobby")
 	private List<LobbyTeam> teams = new ArrayList<LobbyTeam>();
-	
+	@Enumerated(EnumType.STRING)
 	private LobbyStatus status;
 	
 	

@@ -12,6 +12,8 @@ import com.ibasco.agql.protocols.valve.source.query.SourceRconAuthStatus;
 import com.ibasco.agql.protocols.valve.source.query.client.SourceRconClient;
 import com.ibasco.agql.protocols.valve.source.query.exceptions.RconNotYetAuthException;
 
+import br.com.sonikro.coliseum.entity.ServerCFG;
+
 public class RCONConnection {
 	
 	private static Logger logger = Logger.getLogger(RCONConnection.class);
@@ -72,6 +74,12 @@ public class RCONConnection {
 		CompletableFuture<String> execute = rconClient.execute(socketAddress, cmd);
 		return execute.get();
 
+	}
+	
+	public String executeCfg(ServerCFG cfg) throws Exception
+	{
+		CompletableFuture<String> execute = rconClient.execute(socketAddress, cfg.toString());
+		return execute.get();
 	}
 	
 	public void executeCmdAsync(String cmd, BiConsumer<String, Throwable> callBack) throws RconNotYetAuthException

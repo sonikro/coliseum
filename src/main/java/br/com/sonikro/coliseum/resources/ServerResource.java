@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -13,20 +14,21 @@ import javax.ws.rs.core.MediaType;
 import br.com.sonikro.coliseum.connections.RCONConnection;
 import br.com.sonikro.coliseum.dao.GenericDAO;
 import br.com.sonikro.coliseum.model.APIResponse;
+import br.com.sonikro.coliseum.security.Secure;
 import br.com.sonikro.coliseum.entity.Server;
 
-@Path("server")
-public class ServerResource {
+@Path("server") @Secure(authenticator="BASIC_AUTH")
+public class ServerResource {	
 	@Inject
 	private GenericDAO<Server> serverDAO;;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{serverId}")
-	public Server getServer(@PathParam("serverId") Integer serverId)
+	@Transactional
+	public Server getServer(@PathParam("serverId") Long serverId)
 	{
 		Server server = serverDAO.find(serverId);
-		server.setRcon_password("*****");
 		return server;
 	}
 	
@@ -83,6 +85,15 @@ public class ServerResource {
 		connection.close();
 		
 		return result;
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public Server updateServer(Server server)
+	{
+		serverDAO.update(server);
+		return server;
 	}
 	
 }

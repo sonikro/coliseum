@@ -25,7 +25,6 @@ public class ServerResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{serverId}")
-	@Transactional
 	public Server getServer(@PathParam("serverId") Long serverId)
 	{
 		Server server = serverDAO.find(serverId);
@@ -51,7 +50,7 @@ public class ServerResource {
 		
 	}
 	
-	@POST @Transactional
+	@POST 
 	@Produces(MediaType.APPLICATION_JSON)
 	public Server createServer(Server server)
 	{
@@ -59,7 +58,7 @@ public class ServerResource {
 		return server;
 	}
 	
-	@DELETE @Transactional
+	@DELETE 
 	@Path("/{serverId}")
 	public void deleteServer(@PathParam("serverId") Integer serverId)
 	{
@@ -89,7 +88,6 @@ public class ServerResource {
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
 	public Server updateServer(Server server)
 	{
 		serverDAO.update(server);

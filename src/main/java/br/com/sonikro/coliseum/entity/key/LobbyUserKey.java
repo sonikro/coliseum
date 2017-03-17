@@ -13,4 +13,15 @@ public class LobbyUserKey implements Serializable{
 	private static final long serialVersionUID = 1L;
 	Lobby lobby;
 	 User user;
+	 
+	 public LobbyUserKey()
+	 {
+		 
+	 }
+	 
+	 public LobbyUserKey(Lobby lobby, User user)
+	 {
+		 this.lobby = lobby;
+		 this.user = user;
+	 }
 }

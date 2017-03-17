@@ -3,6 +3,7 @@ package br.com.sonikro.coliseum.entity.key;
 import java.io.Serializable;
 
 import br.com.sonikro.coliseum.entity.Lobby;
+import br.com.sonikro.coliseum.entity.Team;
 
 public class LobbyTeamKey implements Serializable{
 

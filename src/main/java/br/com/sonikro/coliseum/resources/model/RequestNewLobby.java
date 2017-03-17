@@ -1,4 +1,4 @@
-package br.com.sonikro.coliseum.resources.request;
+package br.com.sonikro.coliseum.resources.model;
 
 public class RequestNewLobby {
 	 public Long gameType_id;

@@ -1,9 +1,13 @@
 package br.com.sonikro.coliseum.command.lobby;
 
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+
 import br.com.sonikro.coliseum.command.BaseResourceCMD;
 import br.com.sonikro.coliseum.dao.GenericDAO;
 import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.Lobby;
+import br.com.sonikro.coliseum.entity.LobbyTeam;
 import br.com.sonikro.coliseum.entity.Server;
 import br.com.sonikro.coliseum.enumerators.LobbyStatus;
 import br.com.sonikro.coliseum.enumerators.ServerStatus;
@@ -21,9 +25,6 @@ public class InitializeLobbyCMD extends BaseResourceCMD<Lobby>{
 	@CmdResultVar(name="lobby")
 	protected Lobby mLobby;
 	
-	public InitializeLobbyCMD(ICommandListener listener, Object... starterObjects) {
-		super(listener, starterObjects);
-	}
 
 	@Override
 	public void execute() throws Exception {

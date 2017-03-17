@@ -1,8 +1,10 @@
 package br.com.sonikro.coliseum.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,29 +12,45 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlTransient;
+
+import org.hibernate.annotations.Cascade;
 
 import br.com.sonikro.coliseum.enumerators.LobbyStatus;
 
 @Entity
-public class Lobby {
+public class Lobby implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne(fetch=FetchType.LAZY)
+	
+	@ManyToOne
 	private Server server;
+	
 	@ManyToOne
 	private GameType gameType;
+	
 	@ManyToOne
 	private Map map;
-	@OneToMany(mappedBy="lobby")
-	private List<LobbyUser> users = new ArrayList<LobbyUser>();
-	@OneToMany(mappedBy="lobby")
-	private List<LobbyTeam> teams = new ArrayList<LobbyTeam>();
+	
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="lobby_id",insertable=true,updatable=true)
+	private List<LobbyUser> users;
+	
+	@OneToMany(cascade=CascadeType.ALL) 
+	@JoinColumn(name="lobby_id",insertable=true,updatable=true)
+	private List<LobbyTeam> teams;
+	
 	@Enumerated(EnumType.STRING)
 	private LobbyStatus status;
-	
-	
+
 	public List<LobbyUser> getUsers() {
 		return users;
 	}
@@ -40,7 +58,6 @@ public class Lobby {
 	public void setUsers(List<LobbyUser> users) {
 		this.users = users;
 	}
-
 	public List<LobbyTeam> getTeams() {
 		return teams;
 	}
@@ -89,5 +106,29 @@ public class Lobby {
 		this.status = status;
 	}
 	
+	public void addTeam(LobbyTeam team)
+	{
+		if(this.teams == null)
+		{
+			this.teams = new ArrayList<LobbyTeam>();
+		}
+		this.teams.add(team);
+		//team.setLobby(this);
+	}
 	
+	public void addUser(LobbyUser user)
+	{
+		if(this.users==null)
+		{
+			this.users = new ArrayList<LobbyUser>();
+		}
+		this.users.add(user);
+		//user.setLobby(this);
+	}
+	
+	public void removeUser(LobbyUser user)
+	{
+		this.users.remove(user);
+		//user.setLobby(null);
+	}
 }

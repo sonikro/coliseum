@@ -8,12 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlTransient;
 
 import br.com.sonikro.coliseum.entity.key.TeamPlayerKey;
 
 @Entity @IdClass(TeamPlayerKey.class)
 public class TeamPlayer {
-	@Id @ManyToOne
+	@Id @ManyToOne @XmlTransient
 	private Team team;
 	@Id @ManyToOne
 	private User player;
@@ -31,7 +32,7 @@ public class TeamPlayer {
 	}
 
 	
-
+	@XmlTransient
 	public Team getTeam() {
 		return team;
 	}

@@ -1,10 +1,7 @@
 package br.com.sonikro.coliseum.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,46 +9,52 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import br.com.sonikro.coliseum.command.BaseResourceCMD;
+import br.com.sonikro.coliseum.command.lobby.AddUserToLobbyCMD;
+import br.com.sonikro.coliseum.command.lobby.CreateDefaultLobbyTeamsCMD;
 import br.com.sonikro.coliseum.command.lobby.InitializeLobbyCMD;
+import br.com.sonikro.coliseum.command.lobby.RemoveUserFromLobbyCMD;
 import br.com.sonikro.coliseum.command.server.GetAvailableServerCMD;
-import br.com.sonikro.coliseum.dao.GenericDAO;
 import br.com.sonikro.coliseum.dao.ServerDAO;
 import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.Lobby;
-import br.com.sonikro.coliseum.entity.Server;
-import br.com.sonikro.coliseum.resources.request.RequestNewLobby;
+import br.com.sonikro.coliseum.entity.User;
+import br.com.sonikro.coliseum.resources.model.RequestNewLobby;
 import br.com.sonikro.coliseum.security.Secure;
 import br.com.sonikro.command.BaseCommand;
 import br.com.sonikro.command.ChainCommand;
+import br.com.sonikro.command.ChainCommandBuilder;
 
 @Path("lobby") @Secure(authenticator="BASIC_AUTH")
 public class LobbyResource extends BaseResource{
-	@Inject
-	private GenericDAO<GameType> gameTypeDAO;
-	@Inject
-	private GenericDAO<Server> serverDAO;
-	@Inject
-	private GenericDAO<Lobby> lobbyDAO;
 	
+
 	@Path("/requestNewLobby")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional 
 	public Lobby initializeLobby(RequestNewLobby request) throws Exception
 	{
 		
 		GameType gameType = gameTypeDAO.find(request.gameType_id);
 		
-		BaseResourceCMD<Server> getServercommand = new GetAvailableServerCMD(this,new ServerDAO(serverDAO),gameType.getNumber_of_players());
-		BaseResourceCMD<Lobby> initializeLobbyCommand = new InitializeLobbyCMD(this, lobbyDAO, gameType);
+		BaseCommand getAvailableServer = cmdBuilder.setCommandClass(GetAvailableServerCMD.class)
+												   .initializeWith(new ServerDAO(serverDAO), gameType.getNumber_of_players())
+												   .build();
 		
-		List<BaseCommand> commandList = new ArrayList<BaseCommand>();
-		commandList.add(getServercommand);
-		commandList.add(initializeLobbyCommand);
+		BaseCommand initializeLobby = cmdBuilder.setCommandClass(InitializeLobbyCMD.class)
+											    .initializeWith(lobbyDAO, gameType)
+											    .build();
 		
-		ChainCommand chainCommand = new ChainCommand(this, commandList);
+		BaseCommand createLobyTeams = cmdBuilder.setCommandClass(CreateDefaultLobbyTeamsCMD.class)
+												 .build();
 		
+		ChainCommandBuilder chainBuilder = new ChainCommandBuilder();
+		
+		ChainCommand chainCommand = chainBuilder.setListener(this)
+												.add(getAvailableServer)
+												.add(initializeLobby)
+												.add(createLobyTeams)
+												.build();
+
 		chainCommand.dispatch();
 		
 		chainCommand.throwException();
@@ -66,7 +69,51 @@ public class LobbyResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Lobby getLobby(@PathParam("lobbyId") Long lobbyId)
 	{
-		return lobbyDAO.find(lobbyId);
+		Lobby lobby = lobbyDAO.find(lobbyId);
+		lobby.getUsers(); //Lazy
+		lobby.getTeams();
+		return lobby;
 	}
+	
+	@Path("/{lobbyId}/addUser")
+	@POST
+	public void addUserToLobby(@PathParam("lobbyId") Long lobbyId, User user) throws Exception
+	{
+		Lobby lobby = lobbyDAO.find(lobbyId);
+		User managedUser = userDAO.find(user.getId());
+		
+		
+		BaseCommand command = cmdBuilder.setCommandClass(AddUserToLobbyCMD.class)
+			      						.initializeWith(lobbyUserDAO,lobby,managedUser)
+			      						.build();
+		command.dispatch();
+		command.throwException();
+		
+	}
+	
+	@Path("/{lobbyId}/removeUser")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public void removeUserFromLobby(@PathParam("lobbyId") Long lobbyId, User user) throws Exception
+	{
+		Lobby lobby = lobbyDAO.find(lobbyId);
+		User managedUser = userDAO.find(user.getId());
+		
+		BaseCommand command = cmdBuilder.setCommandClass(RemoveUserFromLobbyCMD.class)
+										.initializeWith(lobbyUserDAO,lobby,managedUser)
+										.build();
+		command.dispatch();
+		command.throwException();
+		
+	}
+	
+	@Path("/{lobbyId}/team/{lobbyTeamId}/addPlayer")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public void addPlayerToTeam(@PathParam("lobbyId") Long lobbyId, @PathParam("lobbyTeamId") Long lobbyTeamId)
+	{
+		
+	}
+	
 	
 }

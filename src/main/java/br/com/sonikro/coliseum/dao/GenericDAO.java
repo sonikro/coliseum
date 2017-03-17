@@ -62,6 +62,7 @@ public class GenericDAO<Type> implements Serializable{
 	{
 		logger.info("GenericDAO<"+objectClass.getName()+"> -> FIND : "+id);
 		return (Type) manager.find(objectClass, id);
+		
 	}
 	
 	public List<Type> list()

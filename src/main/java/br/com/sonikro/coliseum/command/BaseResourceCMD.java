@@ -10,10 +10,4 @@ public abstract class BaseResourceCMD<Type> extends BaseCommand{
 	@CmdStarterVar @CmdResultVar(name="genericDAO")
 	protected GenericDAO<Type> mDAO;
 	
-	public BaseResourceCMD(ICommandListener listener, Object... starterObjects) {
-		super(listener, starterObjects);
-	}
-
-	
-
 }

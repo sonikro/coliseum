@@ -16,7 +16,7 @@ public class APIClient {
 	        read =  "pgp_sym_decrypt(password::bytea, current_setting('encrypt.key')::text)",
 	        write = "pgp_sym_encrypt(?::text,current_setting('encrypt.key')::text) "
 	    )
-	@Column(columnDefinition = "bytea")	
+	@Column(columnDefinition = "bytea")
 	private String password;
 	private String hostname;
 	

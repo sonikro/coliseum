@@ -17,11 +17,6 @@ public class GetAvailableServerCMD extends BaseResourceCMD<Server>{
 	@CmdResultVar(name="server")
 	protected Server mServer;
 	
-	public GetAvailableServerCMD(br.com.sonikro.command.ICommandListener listener, Object... starterObjects) {
-		super(listener, starterObjects);
-	}
-
-	
 	@Override
 	public void execute() throws Exception {
 		try {

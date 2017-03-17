@@ -4,19 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
 import br.com.sonikro.coliseum.entity.key.TeamPlayerRoleKey;
 
 @Entity @IdClass(TeamPlayerRoleKey.class)
 public class TeamPlayerRole {
-	@Id @ManyToOne
+	@Id @ManyToOne @XmlTransient
 	private TeamPlayer player;
 	@Id @ManyToOne
 	private GameClass gameClass;
 	private Boolean is_main;
 	
 	
-	
+	@XmlTransient
 	public TeamPlayer getPlayer() {
 		return player;
 	}

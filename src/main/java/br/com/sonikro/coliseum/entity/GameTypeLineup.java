@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
 import br.com.sonikro.coliseum.entity.key.GameTypeLineupKey;
 
@@ -17,7 +18,7 @@ public class GameTypeLineup {
 	
 	private Integer quantity;
 	
-	
+	@XmlTransient
 	public GameType getGameType() {
 		return gameType;
 	}
@@ -35,6 +36,12 @@ public class GameTypeLineup {
 	}
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		GameTypeLineup lineup = (GameTypeLineup) obj;
+		return (lineup.getGameType().equals(this.getGameType()) && lineup.getGameClass().equals(this.getGameClass()));
 	}
 	
 }

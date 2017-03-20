@@ -1,5 +1,8 @@
 package br.com.sonikro.coliseum.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.GET;
@@ -10,7 +13,9 @@ import javax.ws.rs.core.MediaType;
 
 import br.com.sonikro.coliseum.dao.GenericDAO;
 import br.com.sonikro.coliseum.entity.APIClient;
+import br.com.sonikro.coliseum.entity.GameClass;
 import br.com.sonikro.coliseum.entity.GameType;
+import br.com.sonikro.coliseum.entity.GameTypeLineup;
 import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyTeam;
 import br.com.sonikro.coliseum.entity.Server;
@@ -34,6 +39,8 @@ public class TestResource {
 	private GenericDAO<Tier> tierDAO;
 	@Inject
 	private GenericDAO<Lobby> lobbyDAO;
+	@Inject
+	private GenericDAO<GameClass> gameClassDAO;
 	
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -84,13 +91,29 @@ public class TestResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public GameType createGameType()
+    public GameType createGameType(List<GameClass> list)
     {
 
     	GameType gameType = new GameType();
     	gameType.setMax_rost_number(10);
     	gameType.setName("6v6");
     	gameType.setNumber_of_players(12);
+    	
+    	for (GameClass gameClass : list) {
+			GameTypeLineup lineup = new GameTypeLineup();
+			lineup.setGameClass(gameClass);
+			if(gameClass.getName().equals("Scout"))
+			{
+				lineup.setQuantity(2);
+			}
+			else
+			{
+				lineup.setQuantity(1);
+			}
+			gameType.addGameTypeLineUp(lineup);
+		}
+    	
+    	
     	gameTypeDAO.insert(gameType);
     	return gameType;
     }
@@ -134,34 +157,39 @@ public class TestResource {
     	createTier();
     	createUser();
     	createClient();
-    	createGameType();
     	createServer();
+    	createGameType(createGameClass());
     }
     
-    @Path("/createNewLobby")
-    @POST
-    
-    public Lobby createNewLobby()
-    {
-    	Server server = createServer();
-    	GameType gameType = createGameType();
-    	Tier tier = createTier();
+    private List<GameClass> createGameClass() {
+    	List<GameClass> gameClassList = new ArrayList<GameClass>();
     	
-    	Lobby lobby = new Lobby();
-    	lobby.setServer(server);
-    	lobby.setGameType(gameType);
-    	lobby.setStatus(LobbyStatus.BUILDING);
-    	
-    	LobbyTeam teamRED = new LobbyTeam();
-    	teamRED.setName("RED");
-    	
-    	LobbyTeam teamBLU = new LobbyTeam();
-    	teamBLU.setName("BLU");
-    	
-    	lobby.addTeam(teamRED);
-    	lobby.addTeam(teamBLU);
-    	
-    	lobbyDAO.insert(lobby);
-    	return lobby;
-    }
+		GameClass gameClass = new GameClass();
+		gameClass.setName("Scout");
+		gameClassDAO.insert(gameClass);
+		gameClassList.add(gameClass);
+		
+		gameClass = new GameClass();
+		gameClass.setName("Pocket");
+		gameClassDAO.insert(gameClass);
+		gameClassList.add(gameClass);
+		
+		gameClass = new GameClass();
+		gameClass.setName("Roamer");
+		gameClassDAO.insert(gameClass);
+		gameClassList.add(gameClass);
+		
+		gameClass = new GameClass();
+		gameClass.setName("Demoman");
+		gameClassDAO.insert(gameClass);
+		gameClassList.add(gameClass);
+		
+		gameClass = new GameClass();
+		gameClass.setName("Medic");
+		gameClassDAO.insert(gameClass);
+		gameClassList.add(gameClass);
+		
+		return gameClassList;
+	}
+
 }

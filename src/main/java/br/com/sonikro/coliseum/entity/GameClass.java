@@ -30,4 +30,10 @@ public class GameClass {
 		this.icon_url = icon_url;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		GameClass gameClass = (GameClass) obj;
+		return gameClass.getId().equals(this.getId());
+	}
+	
 }

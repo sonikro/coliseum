@@ -10,12 +10,14 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import br.com.sonikro.coliseum.entity.key.LobbyTeamPlayerKey;
 
-@Entity //@IdClass(LobbyTeamPlayerKey.class)
+@Entity @IdClass(LobbyTeamPlayerKey.class)
 public class LobbyTeamPlayer {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	/*@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;*/
 	
-	@ManyToOne
+	@Id @ManyToOne
+	private LobbyTeam lobbyTeam;
+	@Id @ManyToOne
 	private User user;
 	@ManyToOne
 	private GameClass gameClass;
@@ -26,12 +28,15 @@ public class LobbyTeamPlayer {
 	private Boolean is_ready;
 	
 	
-	public Long getLobby_team_player_id() {
-		return id;
+	@XmlTransient
+	public LobbyTeam getLobbyTeam() {
+		return lobbyTeam;
 	}
-	public void setLobby_team_player_id(Long lobby_team_player_id) {
-		this.id = lobby_team_player_id;
+	
+	public void setLobbyTeam(LobbyTeam lobbyTeam) {
+		this.lobbyTeam = lobbyTeam;
 	}
+	
 	public User getUser() {
 		return user;
 	}
@@ -61,7 +66,10 @@ public class LobbyTeamPlayer {
 	@Override
 	public boolean equals(Object obj) {
 		LobbyTeamPlayer player = (LobbyTeamPlayer) obj;
-		return (player.getLobby_team_player_id().equals(this.getLobby_team_player_id()));
+		LobbyTeam team = player.getLobbyTeam();
+		User user = player.getUser();
+		
+		return (user.equals(this.user) && team.equals(this.lobbyTeam));
 	}
 	
 }

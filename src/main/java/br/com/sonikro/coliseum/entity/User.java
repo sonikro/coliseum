@@ -84,5 +84,11 @@ public class User {
 		this.tier = tier;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		User user = (User) obj;
+		return user.getId().equals(this.getId());
+	}
+	
 	
 }

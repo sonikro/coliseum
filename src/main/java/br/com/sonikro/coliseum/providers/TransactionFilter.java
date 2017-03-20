@@ -30,7 +30,12 @@ public class TransactionFilter implements ContainerRequestFilter, ContainerRespo
 		
 		if(responseContext.getStatus()!=500)
 		{
-			entityManager.flush();
+			try {
+				entityManager.flush();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
 		}
 	}
 

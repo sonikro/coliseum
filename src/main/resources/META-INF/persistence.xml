@@ -6,6 +6,7 @@
    <persistence-unit name="coliseum" transaction-type="RESOURCE_LOCAL">
      <description>Coliseum</description>
      <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+      <shared-cache-mode>ALL</shared-cache-mode>
       
 	<properties>
         <!--  <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/> -->
@@ -13,9 +14,9 @@
 <!-- 		<property name="hibernate.connection.datasource" value="jdbc/coliseum"/>  -->
        <property name="hibernate.show_sql" value="true"/>
        <property name="hibernate.format_sql" value="true"/>
-       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+       <property name="hibernate.hbm2ddl.auto" value="update"/>
 		<property name="hibernate.connection.datasource" value="jdbc/coliseum"/>
-		
+		<property name="hibernate.cache.use_second_level_cache" value="true"/>
 	</properties>
    </persistence-unit>
  

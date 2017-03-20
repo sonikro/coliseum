@@ -19,10 +19,12 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.logging.Logger;
 
 import br.com.sonikro.coliseum.dao.GenericDAO;
+import br.com.sonikro.coliseum.entity.GameClass;
 import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyUser;
 import br.com.sonikro.coliseum.entity.Server;
+import br.com.sonikro.coliseum.entity.Tier;
 import br.com.sonikro.coliseum.entity.User;
 import br.com.sonikro.coliseum.resources.model.ResourceHelp;
 import br.com.sonikro.coliseum.resources.model.ResourceParameter;
@@ -46,6 +48,10 @@ public class BaseResource implements ICommandListener{
 	protected GenericDAO<LobbyUser> lobbyUserDAO;
 	@Inject
 	protected GenericDAO<User> userDAO;
+	@Inject
+	protected GenericDAO<GameClass> gameClassDAO;
+	@Inject
+	protected GenericDAO<Tier> tierDAO;
 	
 	public BaseResource()
 	{

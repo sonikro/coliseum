@@ -1,20 +1,31 @@
 package br.com.sonikro.coliseum.entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
-@Entity //@IdClass(LobbyUserKey.class)
+import br.com.sonikro.coliseum.entity.key.LobbyUserKey;
+
+@Entity @IdClass(LobbyUserKey.class)
 public class LobbyUser {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@ManyToOne 
+	
+	@Id @ManyToOne
+	private Lobby lobby;
+	@Id @ManyToOne 
 	private User user;
-	/*
-	@ManyToOne
-	private Lobby lobby;*/
+	
+	@ManyToMany
+	private Set<GameClass> possibleClasses;
 	
 	public User getUser() {
 		return user;
@@ -24,29 +35,41 @@ public class LobbyUser {
 	}
 	
 	
-	public Long getId() {
-		return id;
+	public void addPossibleClass(GameClass gameClass)
+	{
+		if(this.possibleClasses==null)
+		{
+			this.possibleClasses = new HashSet<GameClass>();
+		}
+		this.possibleClasses.add(gameClass);
 	}
-	public void setId(Long id) {
-		this.id = id;
+	
+	public void removePossibleClass(GameClass gameClass)
+	{
+		if(this.possibleClasses!=null)
+		{
+			this.possibleClasses.remove(gameClass);
+		}
 	}
-	/*
+	public Set<GameClass> getPossibleClasses() {
+		return possibleClasses;
+	}
+	public void setPossibleClasses(Set<GameClass> possibleClasses) {
+		this.possibleClasses = possibleClasses;
+	}
+	@XmlTransient
 	public Lobby getLobby() {
 		return lobby;
 	}
 	public void setLobby(Lobby lobby) {
 		this.lobby = lobby;
-	}*/
-	public Long getLobby_user_id() {
-		return id;
 	}
-	public void setLobby_user_id(Long lobby_user_id) {
-		this.id = lobby_user_id;
-	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		LobbyUser user = (LobbyUser) obj;
 		return this.getUser().getId().equals(user.getUser().getId());
+		
 	}
 	
 	

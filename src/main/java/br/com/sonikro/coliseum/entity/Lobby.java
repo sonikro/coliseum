@@ -40,12 +40,12 @@ public class Lobby implements Serializable{
 	@ManyToOne
 	private Map map;
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="lobby_id",insertable=true,updatable=true)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="lobby")
+	//@JoinColumn(name="lobby_id",insertable=true,updatable=true)
 	private List<LobbyUser> users;
 	
-	@OneToMany(cascade=CascadeType.ALL) 
-	@JoinColumn(name="lobby_id",insertable=true,updatable=true)
+	@OneToMany(cascade=CascadeType.ALL,mappedBy="lobby")
+	//@JoinColumn(name="lobby_id",insertable=true,updatable=true)
 	private List<LobbyTeam> teams;
 	
 	@Enumerated(EnumType.STRING)
@@ -113,7 +113,7 @@ public class Lobby implements Serializable{
 			this.teams = new ArrayList<LobbyTeam>();
 		}
 		this.teams.add(team);
-		//team.setLobby(this);
+		team.setLobby(this);
 	}
 	
 	public void addUser(LobbyUser user)
@@ -123,12 +123,13 @@ public class Lobby implements Serializable{
 			this.users = new ArrayList<LobbyUser>();
 		}
 		this.users.add(user);
-		//user.setLobby(this);
+		user.setLobby(this);
 	}
 	
 	public void removeUser(LobbyUser user)
 	{
 		this.users.remove(user);
 		//user.setLobby(null);
+		
 	}
 }

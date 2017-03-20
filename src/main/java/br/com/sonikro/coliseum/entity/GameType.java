@@ -1,7 +1,11 @@
 package br.com.sonikro.coliseum.entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,8 +19,8 @@ public class GameType {
 	private Integer max_rost_number; //Max number of players in a Team of this GameType
 	private Integer number_of_players; //Number of players needed for a match
 	private String name;
-	@OneToMany(mappedBy="gameType")
-	private List<GameTypeLineup> lineup;
+	@OneToMany(mappedBy="gameType",cascade=CascadeType.ALL)
+	private Set<GameTypeLineup> lineup;
 	
 	
 	public String getName() {
@@ -25,10 +29,10 @@ public class GameType {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<GameTypeLineup> getLineup() {
+	public Set<GameTypeLineup> getLineup() {
 		return lineup;
 	}
-	public void setLineup(List<GameTypeLineup> lineup) {
+	public void setLineup(Set<GameTypeLineup> lineup) {
 		this.lineup = lineup;
 	}
 	public Long getId() {
@@ -50,5 +54,19 @@ public class GameType {
 		this.number_of_players = number_of_players;
 	}
 	
+	public void addGameTypeLineUp(GameTypeLineup lineup)
+	{
+		if(this.lineup == null)
+		{
+			this.lineup = new HashSet<GameTypeLineup>();
+		}
+		lineup.setGameType(this);
+		this.lineup.add(lineup);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return(((GameType)obj).getId().equals(this.getId()));
+	}
 	
 }

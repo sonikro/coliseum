@@ -19,9 +19,13 @@ public class RemoveUserFromLobbyCMD extends BaseResourceCMD<LobbyUser>{
 	
 	@Override
 	public void execute() throws Exception {
-		LobbyUser user = new LobbyUser();
-		user.setUser(mUser);
-		mLobby.removeUser(user);
+		LobbyUserKey key = new LobbyUserKey(mLobby, mUser);
+		
+		LobbyUser user = mDAO.find(key);
+		
+		mDAO.delete(user);
+		//mLobby.removeUser(user);
+
 	}
 
 }

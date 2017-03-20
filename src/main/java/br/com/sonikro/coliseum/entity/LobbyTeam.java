@@ -37,11 +37,11 @@ public class LobbyTeam implements Serializable{
 	
 	private String name;
 	
-	/*@ManyToOne
-	private Lobby lobby;*/
+	@ManyToOne
+	private Lobby lobby;
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="lobby_team_id",insertable=true,updatable=false)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="lobbyTeam")
+	//@JoinColumn(name="lobby_team_id",insertable=true,updatable=false)
 	private List<LobbyTeamPlayer> players = new ArrayList<LobbyTeamPlayer>();
 	
 	
@@ -81,7 +81,7 @@ public class LobbyTeam implements Serializable{
 	public void addTeamPlayer(LobbyTeamPlayer player)
 	{
 		this.players.add(player);
-		//player.setLobbyTeam(this);
+		player.setLobbyTeam(this);
 	}
 	
 	public void removeTeamPlayer(LobbyTeamPlayer player)
@@ -90,26 +90,27 @@ public class LobbyTeam implements Serializable{
 		//player.setLobbyTeam(null);
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		LobbyTeam lobbyTeam = (LobbyTeam) obj;
-		return lobbyTeam.getLobby_team_id().equals(this.getLobby_team_id());
-	}
+
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	/*public Lobby getLobby() {
+	@XmlTransient
+	public Lobby getLobby() {
 		return lobby;
 	}
 	public void setLobby(Lobby lobby) {
 		this.lobby = lobby;
-	}*/
+	}
 	
 	
-	
+	@Override
+	public boolean equals(Object obj) {
+		LobbyTeam lobbyTeam = (LobbyTeam) obj;
+		return lobbyTeam.getLobby_team_id().equals(this.getLobby_team_id());
+	}
 	
 	
 	

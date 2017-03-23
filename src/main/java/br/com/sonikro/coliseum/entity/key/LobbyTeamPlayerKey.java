@@ -14,4 +14,15 @@ public class LobbyTeamPlayerKey implements Serializable{
 	
 	LobbyTeam lobbyTeam;
 	User user;
+	
+	public LobbyTeamPlayerKey()
+	{
+		
+	}
+	
+	public LobbyTeamPlayerKey(LobbyTeam lobbyTeam, User user)
+	{
+		this.lobbyTeam = lobbyTeam;
+		this.user = user;
+	}
 }

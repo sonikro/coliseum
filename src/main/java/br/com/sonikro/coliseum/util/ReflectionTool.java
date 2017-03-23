@@ -4,10 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -20,6 +26,18 @@ public class ReflectionTool {
 			annotation = getRecursiveAnnotation(searchClass.getSuperclass(), annotationClass);
 		}
 		return annotation;
+	}
+	
+	public static String getMethodVerb(Method method) {
+		Class [] verbs = {GET.class, POST.class, PUT.class, DELETE.class};
+		for(Class verb : verbs)
+		{
+			if(method.isAnnotationPresent(verb))
+			{
+				return verb.getSimpleName();
+			}
+		}
+		return null;
 	}
 	
 	public static Field[] getRecursiveFields(Class objectClass)

@@ -1,6 +1,7 @@
 package br.com.sonikro.coliseum.lobbybuilder;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import br.com.sonikro.coliseum.command.lobby.StartLobbyCMD;
 import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyTeam;
 import br.com.sonikro.coliseum.lobbybuilder.stepfinders.ILobbyStepFinder;
+import br.com.sonikro.coliseum.lobbybuilder.stepfinders.LobbyReadySF;
 import br.com.sonikro.coliseum.lobbybuilder.stepfinders.LobbyStepFinder;
 import br.com.sonikro.coliseum.lobbybuilder.stepfinders.TeamLeaderSF;
 import br.com.sonikro.coliseum.util.ReflectionTool;
@@ -21,8 +23,15 @@ public class LobbyBuilder {
 	
 	private Lobby mLobby;
 	private static List<LobbyStepFinderModel> mStepFinders;
-	
+	private static List<Class> mResourceClasses;
+	//Initialize Static Variables
 	{
+		try {
+			mResourceClasses = ReflectionTool.getClasses("br.com.sonikro.coliseum.resources");
+		} catch (Exception e){
+			logger.error(e);
+		}
+	
 		List<ILobbyStepFinder> mListOfFinders = new ArrayList<>();
 		mStepFinders = new ArrayList<>();
 		
@@ -52,28 +61,9 @@ public class LobbyBuilder {
 		mLobby = lobby;
 	}
 	
-	public boolean isLobbyReady() throws Exception
-	{
-		return (findCurrentStep() == null ? true : false);
-	}
-	
 	public LobbyBuilderStep getStep() throws Exception
 	{
-		LobbyBuilderStep step = new LobbyBuilderStep();
-		
-		if(isLobbyReady())
-		{
-			step.setDesription("Lobby is ready");
-			step.setActionPath("/lobby/"+mLobby.getId()+"/start");
-			step.setActionVerb("POST");
-		}
-		else
-		{
-			step = findCurrentStep();
-		}
-		
-		
-		return step;
+		return findCurrentStep();
 		
 	}
 
@@ -86,7 +76,31 @@ public class LobbyBuilder {
 			if(step != null)
 			{
 				step.setStep_code(finder.getStep_code());
+				Method actionMethod = findActionMethod(finder.getStep_code());
+				if(actionMethod != null)
+				{
+					step.setActionMethod(actionMethod);
+					step.buildActionPathWithKeys();
+				}
+				
 				return step;
+			}
+		}
+		return null;
+	}
+
+	private Method findActionMethod(String step_code) {
+		for (Class resourceClass : mResourceClasses) {
+			Method [] classMethods = resourceClass.getDeclaredMethods();
+			for (Method method : classMethods) {
+				if(method.isAnnotationPresent(SolvesLobbyStep.class))
+				{
+					SolvesLobbyStep annotation = method.getAnnotation(SolvesLobbyStep.class);
+					if(annotation.step_code().equals(step_code))
+					{
+						return method;
+					}
+				}
 			}
 		}
 		return null;

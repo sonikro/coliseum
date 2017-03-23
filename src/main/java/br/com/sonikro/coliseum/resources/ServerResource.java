@@ -1,5 +1,7 @@
 package br.com.sonikro.coliseum.resources;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
@@ -15,19 +17,20 @@ import br.com.sonikro.coliseum.connections.RCONConnection;
 import br.com.sonikro.coliseum.dao.GenericDAO;
 import br.com.sonikro.coliseum.model.APIResponse;
 import br.com.sonikro.coliseum.security.Secure;
+import br.com.sonikro.coliseum.entity.Map;
 import br.com.sonikro.coliseum.entity.Server;
 
 @Path("server") @Secure(authenticator="BASIC_AUTH")
 public class ServerResource {	
 	@Inject
-	private GenericDAO<Server> serverDAO;;
+	private GenericDAO<Server> mServerDAO;;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{serverId}")
 	public Server getServer(@PathParam("serverId") Long serverId)
 	{
-		Server server = serverDAO.find(serverId);
+		Server server = mServerDAO.find(serverId);
 		return server;
 	}
 	
@@ -36,7 +39,7 @@ public class ServerResource {
 	@Path("/status/{serverId}")
 	public String getServerStatus(@PathParam("serverId") Integer serverId) throws Exception
 	{
-		Server server = serverDAO.find(serverId);
+		Server server = mServerDAO.find(serverId);
 		
 		RCONConnection rconConnection = server.getRCONConnection();
 		
@@ -54,7 +57,7 @@ public class ServerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Server createServer(Server server)
 	{
-		serverDAO.insert(server);
+		mServerDAO.insert(server);
 		return server;
 	}
 	
@@ -62,9 +65,9 @@ public class ServerResource {
 	@Path("/{serverId}")
 	public void deleteServer(@PathParam("serverId") Integer serverId)
 	{
-		Server server = serverDAO.find(serverId);
+		Server server = mServerDAO.find(serverId);
 		
-		serverDAO.delete(server);
+		mServerDAO.delete(server);
 	}
 	
 	@GET
@@ -73,7 +76,7 @@ public class ServerResource {
 	public String executeRconCommand(@PathParam("serverId") Integer serverId,
 										@PathParam("rconCommand") String command) throws Exception
 	{
-		Server server = serverDAO.find(serverId);
+		Server server = mServerDAO.find(serverId);
 		
 		RCONConnection connection = server.getRCONConnection();
 		
@@ -90,8 +93,16 @@ public class ServerResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Server updateServer(Server server)
 	{
-		serverDAO.update(server);
+		mServerDAO.update(server);
 		return server;
+	}
+	
+	@GET
+	@Path("/{serverId}/maps")
+	public List<Map> getServerMaps(@PathParam("serverId") Long serverId)
+	{
+		Server server = mServerDAO.find(serverId);
+		return server.getMaps();
 	}
 	
 }

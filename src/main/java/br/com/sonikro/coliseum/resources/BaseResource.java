@@ -23,12 +23,14 @@ import br.com.sonikro.coliseum.entity.GameClass;
 import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyUser;
+import br.com.sonikro.coliseum.entity.Map;
 import br.com.sonikro.coliseum.entity.Server;
 import br.com.sonikro.coliseum.entity.Tier;
 import br.com.sonikro.coliseum.entity.User;
 import br.com.sonikro.coliseum.resources.model.ResourceHelp;
 import br.com.sonikro.coliseum.resources.model.ResourceParameter;
 import br.com.sonikro.coliseum.util.DummyObjectGenerator;
+import br.com.sonikro.coliseum.util.ReflectionTool;
 import br.com.sonikro.command.CommandBuilder;
 import br.com.sonikro.command.ICommand;
 import br.com.sonikro.command.ICommandListener;
@@ -39,20 +41,21 @@ public class BaseResource implements ICommandListener{
 
 
 	@Inject
-	protected GenericDAO<GameType> gameTypeDAO;
+	protected GenericDAO<GameType> mGameTypeDAO;
 	@Inject
-	protected GenericDAO<Server> serverDAO;
+	protected GenericDAO<Server> mServerDAO;
 	@Inject
-	protected GenericDAO<Lobby> lobbyDAO;
+	protected GenericDAO<Lobby> mLobbyDAO;
 	@Inject
-	protected GenericDAO<LobbyUser> lobbyUserDAO;
+	protected GenericDAO<LobbyUser> mLobbyUserDAO;
 	@Inject
-	protected GenericDAO<User> userDAO;
+	protected GenericDAO<User> mUserDAO;
 	@Inject
-	protected GenericDAO<GameClass> gameClassDAO;
+	protected GenericDAO<GameClass> mGameClassDAO;
 	@Inject
-	protected GenericDAO<Tier> tierDAO;
-	
+	protected GenericDAO<Tier> mTierDAO;
+	@Inject
+	protected GenericDAO<Map> mMapDAO;
 	public BaseResource()
 	{
 		cmdBuilder = new CommandBuilder(this);
@@ -84,7 +87,7 @@ public class BaseResource implements ICommandListener{
 				ResourceHelp help = new ResourceHelp();
 				help.signature = getMethodParameters(method);
 				help.path = path.value();
-				help.verb = getMethodVerb(method);
+				help.verb = ReflectionTool.getMethodVerb(method);
 				if(help.verb!=null)
 				{
 					helpList.add(help);
@@ -108,17 +111,7 @@ public class BaseResource implements ICommandListener{
 		return methodParameters.toArray(objects);*/
 	}
 
-	private String getMethodVerb(Method method) {
-		Class [] verbs = {GET.class, POST.class, PUT.class, DELETE.class};
-		for(Class verb : verbs)
-		{
-			if(method.isAnnotationPresent(verb))
-			{
-				return verb.getSimpleName();
-			}
-		}
-		return null;
-	}
+	
 	
 
 }

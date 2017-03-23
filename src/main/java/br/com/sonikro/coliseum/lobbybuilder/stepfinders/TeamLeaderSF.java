@@ -14,16 +14,12 @@ public class TeamLeaderSF implements ILobbyStepFinder{
 			{
 				LobbyBuilderStep step = new LobbyBuilderStep();
 				step.setDesription("Team "+lobbyTeam.getName()+" needs a leader");
-				step.setActionPath(buildActionPath(lobby, lobbyTeam));
-				step.setActionVerb(actionVerb);
+				step.getActionKeys().put("{lobbyTeamId}", lobbyTeam.getId().toString());
 				return step;
 			}
 		}
 		return null;
 	}
 
-	private String buildActionPath(Lobby lobby,LobbyTeam lobbyTeam) {
-		return "/lobbyTeam/"+lobbyTeam.getId()+"/setLeader";
-	}
 
 }

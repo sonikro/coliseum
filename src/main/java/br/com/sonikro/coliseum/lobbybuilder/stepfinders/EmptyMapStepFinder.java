@@ -12,6 +12,7 @@ public class EmptyMapStepFinder implements ILobbyStepFinder{
 		{
 			LobbyBuilderStep step = new LobbyBuilderStep();
 			step.setDesription("Select the MAP");
+			step.getActionKeys().put("{lobbyId}", lobby.getId().toString());
 			return step;
 		}
 		return null;

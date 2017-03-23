@@ -20,7 +20,7 @@ public class TierResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Tier> getAllTiers()
 	{
-		return tierDAO.list();
+		return mTierDAO.list();
 	}
 	
 	@GET
@@ -28,19 +28,19 @@ public class TierResource extends BaseResource{
 	@Path("/{tierId}")
 	public Tier getTier(@PathParam("tierId") Long id)
 	{
-		return tierDAO.find(id);
+		return mTierDAO.find(id);
 	}
 	
 	@POST
 	public void createTier(Tier tier)
 	{
-		tierDAO.insert(tier);
+		mTierDAO.insert(tier);
 	}
 	
 	@PUT
 	public void updateTier(Tier tier)
 	{
-		tierDAO.update(tier);
+		mTierDAO.update(tier);
 	}
 	
 	

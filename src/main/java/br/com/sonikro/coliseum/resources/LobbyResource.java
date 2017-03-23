@@ -17,16 +17,20 @@ import br.com.sonikro.coliseum.command.lobby.CreateDefaultLobbyTeamsCMD;
 import br.com.sonikro.coliseum.command.lobby.InitializeLobbyCMD;
 import br.com.sonikro.coliseum.command.lobby.RemovePossibleClassCMD;
 import br.com.sonikro.coliseum.command.lobby.RemoveUserFromLobbyCMD;
+import br.com.sonikro.coliseum.command.lobby.SetLobbyMapCMD;
+import br.com.sonikro.coliseum.command.lobby.StartLobbyCMD;
 import br.com.sonikro.coliseum.command.server.GetAvailableServerCMD;
 import br.com.sonikro.coliseum.dao.ServerDAO;
 import br.com.sonikro.coliseum.entity.GameClass;
 import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyUser;
+import br.com.sonikro.coliseum.entity.Map;
 import br.com.sonikro.coliseum.entity.User;
 import br.com.sonikro.coliseum.entity.key.LobbyUserKey;
 import br.com.sonikro.coliseum.lobbybuilder.LobbyBuilder;
 import br.com.sonikro.coliseum.lobbybuilder.LobbyBuilderStep;
+import br.com.sonikro.coliseum.lobbybuilder.SolvesLobbyStep;
 import br.com.sonikro.coliseum.resources.model.RequestNewLobby;
 import br.com.sonikro.coliseum.security.Secure;
 import br.com.sonikro.command.BaseCommand;
@@ -43,14 +47,14 @@ public class LobbyResource extends BaseResource{
 	public Lobby initializeLobby(RequestNewLobby request) throws Exception
 	{
 		
-		GameType gameType = gameTypeDAO.find(request.gameType_id);
+		GameType gameType = mGameTypeDAO.find(request.gameType_id);
 		
 		BaseCommand getAvailableServer = cmdBuilder.setCommandClass(GetAvailableServerCMD.class)
-												   .initializeWith(new ServerDAO(serverDAO), gameType.getNumber_of_players())
+												   .initializeWith(new ServerDAO(mServerDAO), gameType.getNumber_of_players())
 												   .build();
 		
 		BaseCommand initializeLobby = cmdBuilder.setCommandClass(InitializeLobbyCMD.class)
-											    .initializeWith(lobbyDAO, gameType)
+											    .initializeWith(mLobbyDAO, gameType)
 											    .build();
 		
 		BaseCommand createLobyTeams = cmdBuilder.setCommandClass(CreateDefaultLobbyTeamsCMD.class)
@@ -78,7 +82,7 @@ public class LobbyResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Lobby getLobby(@PathParam("lobbyId") Long lobbyId)
 	{
-		Lobby lobby = lobbyDAO.find(lobbyId);
+		Lobby lobby = mLobbyDAO.find(lobbyId);
 		lobby.getUsers(); //Lazy
 		lobby.getTeams();
 		return lobby;
@@ -87,14 +91,15 @@ public class LobbyResource extends BaseResource{
 	
 	@Path("/{lobbyId}/addUser/{userId}")
 	@POST
+	@SolvesLobbyStep(step_code="NOT_ENOUGH_PLAYERS")
 	public void addUserToLobby(@PathParam("lobbyId") Long lobbyId, @PathParam("userId") Long userId) throws Exception
 	{
-		Lobby lobby = lobbyDAO.find(lobbyId);
-		User managedUser = userDAO.find(userId);
+		Lobby lobby = mLobbyDAO.find(lobbyId);
+		User managedUser = mUserDAO.find(userId);
 		
 		
 		BaseCommand command = cmdBuilder.setCommandClass(AddUserToLobbyCMD.class)
-			      						.initializeWith(lobbyUserDAO,lobby,managedUser)
+			      						.initializeWith(mLobbyUserDAO,lobby,managedUser)
 			      						.build();
 		command.dispatch();
 		command.throwException();
@@ -105,11 +110,11 @@ public class LobbyResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public void removeUserFromLobby(@PathParam("lobbyId") Long lobbyId, @PathParam("userId") Long userId) throws Exception
 	{
-		Lobby lobby = lobbyDAO.find(lobbyId);
-		User managedUser = userDAO.find(userId);
+		Lobby lobby = mLobbyDAO.find(lobbyId);
+		User managedUser = mUserDAO.find(userId);
 		
 		BaseCommand command = cmdBuilder.setCommandClass(RemoveUserFromLobbyCMD.class)
-										.initializeWith(lobbyUserDAO,lobby,managedUser)
+										.initializeWith(mLobbyUserDAO,lobby,managedUser)
 										.build();
 		command.dispatch();
 		command.throwException();
@@ -121,7 +126,7 @@ public class LobbyResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public LobbyBuilderStep getLobbyBuildingStep(@PathParam("lobbyId") Long lobbyId) throws Exception
 	{
-		Lobby lobby = lobbyDAO.find(lobbyId);
+		Lobby lobby = mLobbyDAO.find(lobbyId);
 		LobbyBuilder builder = new LobbyBuilder(lobby);
 		return builder.getStep();
 		
@@ -134,11 +139,11 @@ public class LobbyResource extends BaseResource{
 										  @PathParam("userId") Long userId,
 										  @PathParam("gameClassId") Long gameClassId) throws Exception
 	{
-		Lobby lobby = lobbyDAO.find(lobbyId);
-		User user = userDAO.find(userId);
+		Lobby lobby = mLobbyDAO.find(lobbyId);
+		User user = mUserDAO.find(userId);
 		LobbyUserKey key = new LobbyUserKey(lobby, user);
-		LobbyUser lobbyUser = lobbyUserDAO.find(key);
-		GameClass gameClass = gameClassDAO.find(gameClassId);
+		LobbyUser lobbyUser = mLobbyUserDAO.find(key);
+		GameClass gameClass = mGameClassDAO.find(gameClassId);
 		
 		BaseCommand addPossibleClass = cmdBuilder.setCommandClass(AddPossibleClassCMD.class)
 												 .initializeWith(lobbyUser, gameClass)
@@ -158,11 +163,11 @@ public class LobbyResource extends BaseResource{
 										  @PathParam("userId") Long userId,
 										  @PathParam("gameClassId") Long gameClassId) throws Exception
 	{
-		Lobby lobby = lobbyDAO.find(lobbyId);
-		User user = userDAO.find(userId);
+		Lobby lobby = mLobbyDAO.find(lobbyId);
+		User user = mUserDAO.find(userId);
 		LobbyUserKey key = new LobbyUserKey(lobby, user);
-		LobbyUser lobbyUser = lobbyUserDAO.find(key);
-		GameClass gameClass = gameClassDAO.find(gameClassId);
+		LobbyUser lobbyUser = mLobbyUserDAO.find(key);
+		GameClass gameClass = mGameClassDAO.find(gameClassId);
 		
 		BaseCommand addPossibleClass = cmdBuilder.setCommandClass(RemovePossibleClassCMD.class)
 												 .initializeWith(lobbyUser, gameClass)
@@ -175,15 +180,54 @@ public class LobbyResource extends BaseResource{
 		return (LobbyUser) addPossibleClass.getResult("lobbyUser");
 	}
 	
+	@SolvesLobbyStep(step_code="SELECT_MAP")
+	@Path("/{lobbyId}/setMap/{mapId}")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Lobby setLobbyMap(@PathParam("lobbyId") Long lobbyId,
+							 @PathParam("mapId") Long mapId) throws Exception
+	{
+		Lobby lobby = mLobbyDAO.find(lobbyId);
+		Map map = mMapDAO.find(mapId);
+		
+		BaseCommand setLobbyMap = cmdBuilder.setCommandClass(SetLobbyMapCMD.class)
+											.initializeWith(lobby,map)
+											.build();
+		
+		setLobbyMap.dispatch();
+		
+		setLobbyMap.throwException();
+		
+		return lobby;
+	}
+	
+	@SolvesLobbyStep(step_code="READY")
+	@Path("/{lobbyId}/start")
+	@POST
+	public void startLobby(@PathParam("lobbyId") Long lobbyId) throws Exception
+	{
+		Lobby lobby = mLobbyDAO.find(lobbyId);
+		
+		BaseCommand startLobby = cmdBuilder.setCommandClass(StartLobbyCMD.class)
+										   .initializeWith(mLobbyDAO,lobby)
+										   .build();
+		
+		startLobby.dispatch();
+		
+		startLobby.throwException();
+	}
+	
+	
+	
 	@Path("/{lobbyId}/user/{userId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public LobbyUser getLobbyUser(@PathParam("lobbyId") Long lobbyId, @PathParam("userId") Long userId) throws Exception
 	{
-		Lobby lobby = lobbyDAO.find(lobbyId);
-		User user = userDAO.find(userId);
+		Lobby lobby = mLobbyDAO.find(lobbyId);
+		User user = mUserDAO.find(userId);
 		LobbyUserKey key = new LobbyUserKey(lobby, user);
-		LobbyUser lobbyUser = lobbyUserDAO.find(key);
+		LobbyUser lobbyUser = mLobbyUserDAO.find(key);
 		return lobbyUser;
 	}
 	
@@ -191,7 +235,7 @@ public class LobbyResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Lobby> getAllLobby()
 	{
-		return lobbyDAO.list();
+		return mLobbyDAO.list();
 	}
 	
 }

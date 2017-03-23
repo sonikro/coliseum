@@ -21,7 +21,7 @@ public class UserResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getAllUsers()
 	{
-		return userDAO.list();
+		return mUserDAO.list();
 	}
 	
 	@GET
@@ -29,7 +29,7 @@ public class UserResource extends BaseResource{
 	@Path("/{userSteamId}")
 	public User getUserBySteamId(@PathParam("userSteamId")String steamId)
 	{
-		UserDAO typedUserDAO = new UserDAO(userDAO);
+		UserDAO typedUserDAO = new UserDAO(mUserDAO);
 		return typedUserDAO.findBySteamId(steamId);
 	}
 	
@@ -37,14 +37,14 @@ public class UserResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public void createUser(User user)
 	{
-		userDAO.insert(user);
+		mUserDAO.insert(user);
 	}
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public User updateUser(User user)
 	{
-		userDAO.update(user);
+		mUserDAO.update(user);
 		return user;
 	}
 }

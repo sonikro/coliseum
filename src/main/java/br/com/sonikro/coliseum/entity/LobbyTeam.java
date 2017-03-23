@@ -14,6 +14,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlTransient;
 
 import br.com.sonikro.coliseum.entity.key.LobbyTeamKey;
@@ -44,7 +45,16 @@ public class LobbyTeam implements Serializable{
 	//@JoinColumn(name="lobby_team_id",insertable=true,updatable=false)
 	private List<LobbyTeamPlayer> players = new ArrayList<LobbyTeamPlayer>();
 	
+	@OneToOne(mappedBy="lobbyTeam")
+	private LobbyTeamPickingStatus pickingStatus;
 	
+	
+	public LobbyTeamPickingStatus getPickingStatus() {
+		return pickingStatus;
+	}
+	public void setPickingStatus(LobbyTeamPickingStatus pickingStatus) {
+		this.pickingStatus = pickingStatus;
+	}
 	public String getName() {
 		return name;
 	}

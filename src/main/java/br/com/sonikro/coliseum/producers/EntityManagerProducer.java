@@ -4,11 +4,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnit;
 
 import org.jboss.logging.Logger;
 
@@ -16,7 +14,7 @@ import org.jboss.logging.Logger;
 public class EntityManagerProducer {
 	private static Logger logger = Logger.getLogger(EntityManagerProducer.class);
 	
-	private EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 	
 	public  EntityManagerProducer() {
 		logger.info("CDI Producing EntityManagerFactory");
@@ -35,5 +33,10 @@ public class EntityManagerProducer {
 	{
 		logger.info("Disposing Entity Manager");
 		manager.close();
+	}
+	
+	public static EntityManagerFactory getManagerFactory()
+	{
+		return emf;
 	}
 }

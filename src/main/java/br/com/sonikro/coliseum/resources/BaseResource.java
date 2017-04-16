@@ -25,6 +25,7 @@ import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyUser;
 import br.com.sonikro.coliseum.entity.Map;
 import br.com.sonikro.coliseum.entity.Server;
+import br.com.sonikro.coliseum.entity.ServerCFG;
 import br.com.sonikro.coliseum.entity.Tier;
 import br.com.sonikro.coliseum.entity.User;
 import br.com.sonikro.coliseum.resources.model.ResourceHelp;
@@ -56,6 +57,9 @@ public class BaseResource implements ICommandListener{
 	protected GenericDAO<Tier> mTierDAO;
 	@Inject
 	protected GenericDAO<Map> mMapDAO;
+	@Inject
+	protected GenericDAO<ServerCFG> mServerCFGDAO;
+	
 	public BaseResource()
 	{
 		cmdBuilder = new CommandBuilder(this);

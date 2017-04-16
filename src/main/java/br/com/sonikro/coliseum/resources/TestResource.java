@@ -19,6 +19,7 @@ import br.com.sonikro.coliseum.entity.GameTypeLineup;
 import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyTeam;
 import br.com.sonikro.coliseum.entity.Server;
+import br.com.sonikro.coliseum.entity.ServerCFG;
 import br.com.sonikro.coliseum.entity.Tier;
 import br.com.sonikro.coliseum.entity.User;
 import br.com.sonikro.coliseum.enumerators.LobbyStatus;
@@ -41,6 +42,8 @@ public class TestResource {
 	private GenericDAO<Lobby> lobbyDAO;
 	@Inject
 	private GenericDAO<GameClass> gameClassDAO;
+	@Inject
+	private GenericDAO<ServerCFG> serverCFGDAO;
 	
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -130,10 +133,23 @@ public class TestResource {
     	return tier;
     	
     }
+    
+    @Path("/createCFG")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public ServerCFG createCFG()
+    {
+    	ServerCFG cfg = new ServerCFG();
+    	cfg.setCfg_url("http://pastebin.com/raw/AraahcR5");
+    	cfg.setGameType(gameTypeDAO.find(Long.valueOf(1)));
+    	cfg.setName("Dummy CFG");
+    	serverCFGDAO.insert(cfg);
+    	return cfg;
+    }
     @Path("/createUser")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
+    
     public User createUser()
     {
     	User user = new User();

@@ -32,5 +32,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/media/sonikro/HDD/Dropbox/Personal_Documents/Projects/Coliseum/Skommand-0.0.1-SNAPSHOT-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="/media/sonikro/HDD/Dropbox/Personal_Documents/Projects/Coliseum/skommand.jar"/>
+	<classpathentry kind="lib" path="/media/sonikro/HDD/Dropbox/Personal_Documents/Projects/Coliseum/udplistener.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

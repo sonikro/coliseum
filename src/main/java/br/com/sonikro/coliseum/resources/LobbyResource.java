@@ -26,6 +26,7 @@ import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.Lobby;
 import br.com.sonikro.coliseum.entity.LobbyUser;
 import br.com.sonikro.coliseum.entity.Map;
+import br.com.sonikro.coliseum.entity.ServerCFG;
 import br.com.sonikro.coliseum.entity.User;
 import br.com.sonikro.coliseum.entity.key.LobbyUserKey;
 import br.com.sonikro.coliseum.lobbybuilder.LobbyBuilder;
@@ -48,13 +49,14 @@ public class LobbyResource extends BaseResource{
 	{
 		
 		GameType gameType = mGameTypeDAO.find(request.gameType_id);
+		ServerCFG serverCFG = mServerCFGDAO.find(request.cfg_id);
 		
 		BaseCommand getAvailableServer = cmdBuilder.setCommandClass(GetAvailableServerCMD.class)
 												   .initializeWith(new ServerDAO(mServerDAO), gameType.getNumber_of_players())
 												   .build();
 		
 		BaseCommand initializeLobby = cmdBuilder.setCommandClass(InitializeLobbyCMD.class)
-											    .initializeWith(mLobbyDAO, gameType)
+											    .initializeWith(mLobbyDAO, gameType, serverCFG)
 											    .build();
 		
 		BaseCommand createLobyTeams = cmdBuilder.setCommandClass(CreateDefaultLobbyTeamsCMD.class)

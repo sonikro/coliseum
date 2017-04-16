@@ -38,6 +38,9 @@ public class Lobby implements Serializable{
 	private GameType gameType;
 	
 	@ManyToOne
+	private ServerCFG serverCFG;
+	
+	@ManyToOne
 	private Map map;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="lobby")
@@ -50,6 +53,15 @@ public class Lobby implements Serializable{
 	
 	@Enumerated(EnumType.STRING)
 	private LobbyStatus status;
+	
+	
+	public ServerCFG getServerCFG() {
+		return serverCFG;
+	}
+
+	public void setServerCFG(ServerCFG serverCFG) {
+		this.serverCFG = serverCFG;
+	}
 
 	public List<LobbyUser> getUsers() {
 		return users;

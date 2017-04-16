@@ -37,7 +37,7 @@ public class ServerResource {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/status/{serverId}")
-	public String getServerStatus(@PathParam("serverId") Integer serverId) throws Exception
+	public String getServerStatus(@PathParam("serverId") Long serverId) throws Exception
 	{
 		Server server = mServerDAO.find(serverId);
 		
@@ -63,7 +63,7 @@ public class ServerResource {
 	
 	@DELETE 
 	@Path("/{serverId}")
-	public void deleteServer(@PathParam("serverId") Integer serverId)
+	public void deleteServer(@PathParam("serverId") Long serverId)
 	{
 		Server server = mServerDAO.find(serverId);
 		
@@ -71,9 +71,9 @@ public class ServerResource {
 	}
 	
 	@GET
-	@Path("/rcon_command/{serverId}/{rconCommand}")
+	@Path("{serverId}/rcon_command/{rconCommand}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String executeRconCommand(@PathParam("serverId") Integer serverId,
+	public String executeRconCommand(@PathParam("serverId") Long serverId,
 										@PathParam("rconCommand") String command) throws Exception
 	{
 		Server server = mServerDAO.find(serverId);

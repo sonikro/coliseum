@@ -12,6 +12,11 @@ public abstract class JobCommand extends BaseCommand{
 	@CmdStarterVar
 	private EntityManager mEntityManager;
 	
+	
+	public void setEntityManagerFactory(EntityManagerFactory mEMF) {
+		this.mEMF = mEMF;
+	}
+
 	protected EntityManager getEntityManager()
 	{
 		if(mEntityManager==null)
@@ -27,5 +32,17 @@ public abstract class JobCommand extends BaseCommand{
 		{
 			mEntityManager.close();
 		}
+	}
+	
+	@Override
+	public void onSuccess() {
+		super.onSuccess();
+		disposeEntityManager();
+	}
+	
+	@Override
+	public void rollback(Exception exception) {
+		super.rollback(exception);
+		disposeEntityManager();
 	}
 }

@@ -41,11 +41,21 @@ public class Server {
 	private Integer ftp_port;
 	private String ftp_password;
 	private String server_password;
+	private String default_password;
 	
 	
+
 	@ManyToMany
 	private List<Map> maps;
 	
+	
+	public String getDefault_password() {
+		return default_password;
+	}
+	public void setDefault_password(String default_password) {
+		this.default_password = default_password;
+	}
+
 	
 	public List<Map> getMaps() {
 		return maps;
@@ -136,6 +146,9 @@ public class Server {
 	public RCONConnection getRCONConnection()
 	{
 		return new RCONConnection(ip, port, rcon_password);
+	}
+	public void resetPassword() {
+		setServer_password(getDefault_password());
 	}
 	
 }

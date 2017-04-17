@@ -32,12 +32,13 @@ public class UDPPortDAO extends GenericDAO<UDPPort>{
 	
 	public UDPPort getFreePort()
 	{
-		Query query = this.manager.createQuery("select p from "+UDPPort.class.getSimpleName()+" where p.in_use = :in_use", UDPPort.class);
-		query.setParameter("in_use", false);
+		Query query = this.manager.createQuery("select p from "+UDPPort.class.getSimpleName()+" p where p.server IS EMPTY"); //where p.in_use = :in_use", UDPPort.class);
+		//query.setParameter("in_use", false);
 		UDPPort udpPort = null;
 		try {
-			udpPort = (UDPPort) query.getSingleResult();
+			udpPort = (UDPPort) query.getResultList().get(0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("No available UDP Ports to listen to server");
 		}
 		return udpPort;

@@ -16,9 +16,15 @@ public class ExecuteCommandJOB implements Job{
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info("Running Command JOB "+context.getFireInstanceId());
 		//mCommand = (BaseCommand) context.get(COMMAND_KEY);
-		mCommand = (BaseCommand) context.getMergedJobDataMap().get(COMMAND_KEY);
+		
+		try {
+			mCommand = (BaseCommand) context.getMergedJobDataMap().get(COMMAND_KEY);
 
-		mCommand.dispatch();
+			mCommand.dispatch();
+			
+		} catch (Exception e) {
+			logger.info(e);
+		}
 		
 	}
 

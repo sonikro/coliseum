@@ -37,7 +37,7 @@ public class SetupLobbyServerCMD extends BaseResourceCMD<Lobby>{
 		Thread.sleep(20000); //20 seconds for changelevel
 
 		rconCommands.add("sv_password " +serverPassword);
-		rconCommands.add("kickall");
+		//rconCommands.add("kickall");
 		rconCommands.add(mLobby.getServerCFG().toString());
 		rconConnection.executeCommandSequence(rconCommands);
 		

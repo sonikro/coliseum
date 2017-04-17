@@ -39,7 +39,7 @@ public class StartLobbyCMD extends BaseResourceCMD<Lobby>{
 											.initializeWith(mLobby)
 											.build();
 		
-		setupServer.dispatch(); //Setup Server
+		setupServer.dispatch();
 		
 		dispatchServerListeningJOB();
 

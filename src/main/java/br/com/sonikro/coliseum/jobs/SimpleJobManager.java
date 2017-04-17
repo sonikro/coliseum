@@ -13,6 +13,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
+import br.com.sonikro.coliseum.command.JobCommand;
 import br.com.sonikro.coliseum.producers.EntityManagerProducer;
 import br.com.sonikro.command.BaseCommand;
 
@@ -39,9 +40,10 @@ public class SimpleJobManager {
 	{
 		JobDataMap jobData = new JobDataMap();
 		
-		EntityManagerFactory emf = EntityManagerProducer.getManagerFactory();
-		//Inject EntityManagerFactory to the Command, so it can deal with database operations
-		command.setStartObjects(emf);
+		if(command instanceof JobCommand)
+		{
+			((JobCommand)command).setEntityManagerFactory(EntityManagerProducer.getManagerFactory());
+		}
 		
 		jobData.put(ExecuteCommandJOB.COMMAND_KEY, command);
 		

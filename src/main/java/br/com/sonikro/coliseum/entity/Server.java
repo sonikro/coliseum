@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.ColumnTransformer;
 
+import com.ibasco.agql.protocols.valve.source.query.exceptions.RconNotYetAuthException;
+
 import br.com.sonikro.coliseum.connections.RCONConnection;
 import br.com.sonikro.coliseum.enumerators.ServerStatus;
 
@@ -147,7 +149,15 @@ public class Server {
 	{
 		return new RCONConnection(ip, port, rcon_password);
 	}
-	public void resetPassword() {
+	
+	public void executeRconCommand(String command) throws Exception
+	{
+		RCONConnection connection = getRCONConnection();
+		connection.open();
+		connection.executeCmd(command);
+		connection.close();
+	}
+	public void resetPassword() throws Exception{
 		setServer_password(getDefault_password());
 	}
 	

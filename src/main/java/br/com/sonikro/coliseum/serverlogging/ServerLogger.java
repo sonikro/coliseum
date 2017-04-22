@@ -21,6 +21,7 @@ public class ServerLogger{
 		this.mServer = server;
 		this.mHandler = handler;
 		this.mUDPPort = udpPort;
+		this.mUDPPort.assignToServer(mServer);
 	}
 	
 	public void startLogging() throws Exception
@@ -48,7 +49,7 @@ public class ServerLogger{
 										 .preferIPV4()
 										 .withPacketHandler(mHandler)
 										 .build();
-		this.mUDPPort.assignToServer(mServer);		
+		//this.mUDPPort.assignToServer(mServer);		
 	}
 
 	public UDPPort getmUDPPort() {

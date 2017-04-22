@@ -28,7 +28,10 @@ public class FinishLobbyCMD extends BaseResourceCMD<Lobby>{
 		RCONConnection rconConnection = mServer.getRCONConnection();
 		rconConnection.open();
 		rconConnection.executeCmd("sv_password "+mServer.getDefault_password());
+		rconConnection.executeCmd("say [Coliseum] Lobby "+mLobby.getId()+ " ended");
 		rconConnection.close();
+		
+		
 		
 	}
 

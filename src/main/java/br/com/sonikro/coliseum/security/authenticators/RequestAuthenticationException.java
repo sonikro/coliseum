@@ -17,7 +17,7 @@ public class RequestAuthenticationException extends Exception {
 	public Response getResponse()
 	{
 		return Response.status(Response.Status.UNAUTHORIZED)
-				.entity(getMessage())
+				//.e(getMessage())
 				.build();
 	}
 }

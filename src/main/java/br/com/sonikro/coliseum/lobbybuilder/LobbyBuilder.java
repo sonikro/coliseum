@@ -66,6 +66,11 @@ public class LobbyBuilder {
 		return findCurrentStep();
 		
 	}
+	
+	public boolean isLobbyReady() throws Exception
+	{
+		return (findCurrentStep() == null ? true : false);
+	}
 
 	private LobbyBuilderStep findCurrentStep() throws Exception {
 		Iterator<LobbyStepFinderModel> iterator = mStepFinders.iterator();

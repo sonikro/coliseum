@@ -42,7 +42,11 @@ public class SimpleJobManager {
 		
 		if(command instanceof JobCommand)
 		{
-			((JobCommand)command).setEntityManagerFactory(EntityManagerProducer.getManagerFactory());
+			EntityManagerFactory emf = EntityManagerProducer.getManagerFactory();
+			EntityManager em = emf.createEntityManager();
+			em.getTransaction().begin();
+			((JobCommand)command).setEntityManagerFactory(emf);;
+			((JobCommand)command).setEntityManager(em);
 		}
 		
 		jobData.put(ExecuteCommandJOB.COMMAND_KEY, command);

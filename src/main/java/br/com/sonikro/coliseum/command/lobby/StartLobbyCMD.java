@@ -21,6 +21,7 @@ import br.com.sonikro.coliseum.entity.Server;
 import br.com.sonikro.coliseum.enumerators.LobbyStatus;
 import br.com.sonikro.coliseum.jobs.ExecuteCommandJOB;
 import br.com.sonikro.coliseum.jobs.SimpleJobManager;
+import br.com.sonikro.coliseum.lobbybuilder.LobbyBuilder;
 import br.com.sonikro.command.BaseCommand;
 import br.com.sonikro.command.CmdResultVar;
 import br.com.sonikro.command.CmdStarterVar;
@@ -35,6 +36,8 @@ public class StartLobbyCMD extends BaseResourceCMD<Lobby>{
 	public void execute() throws Exception {
 		cmdBuilder = new CommandBuilder(mListener);
 		
+		validateLobby();
+		
 		BaseCommand setupServer = cmdBuilder.setCommandClass(SetupLobbyServerCMD.class)
 											.initializeWith(mLobby)
 											.build();
@@ -42,6 +45,15 @@ public class StartLobbyCMD extends BaseResourceCMD<Lobby>{
 		setupServer.dispatch();
 		
 		dispatchServerListeningJOB();
+
+	}
+	private void validateLobby() throws Exception {
+		LobbyBuilder lobbySteps = new LobbyBuilder(mLobby);
+		if(!lobbySteps.isLobbyReady())
+		{
+			throw new Exception("Lobby is not ready yet");
+		}
+		
 
 	}
 	private void dispatchServerListeningJOB() throws Exception {

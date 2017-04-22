@@ -33,7 +33,7 @@ public class TransactionFilter implements ContainerRequestFilter, ContainerRespo
 			try {
 				entityManager.flush();
 			} catch (Exception e) {
-				// TODO: handle exception
+				logger.error("Error when flushing entityManager",e);
 			}
 			
 		}

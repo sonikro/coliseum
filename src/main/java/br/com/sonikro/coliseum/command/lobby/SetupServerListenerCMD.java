@@ -10,6 +10,7 @@ import br.com.sonikro.coliseum.command.JobCommand;
 import br.com.sonikro.coliseum.dao.GenericDAO;
 import br.com.sonikro.coliseum.dao.UDPPortDAO;
 import br.com.sonikro.coliseum.entity.Lobby;
+import br.com.sonikro.coliseum.entity.Server;
 import br.com.sonikro.coliseum.entity.UDPPort;
 import br.com.sonikro.coliseum.enumerators.LobbyStatus;
 import br.com.sonikro.coliseum.serverlogging.ServerLogger;
@@ -18,7 +19,6 @@ import br.com.sonikro.command.BaseCommand;
 import br.com.sonikro.command.CmdResultVar;
 import br.com.sonikro.command.CmdStarterVar;
 import br.com.sonikro.command.CommandBuilder;
-import io.netty.channel.local.LocalEventLoopGroup;
 
 public class SetupServerListenerCMD extends JobCommand implements PacketHandler{
 
@@ -31,23 +31,27 @@ public class SetupServerListenerCMD extends JobCommand implements PacketHandler{
 	
 	private UDPPortDAO mPortDAO;
 	
+	private Server mServer;
+	
 	@Override
 	public void execute() throws Exception {
 		logger.info("Setting up ServerListener for lobby "+mLobby.getId());
 		
-		//getEntityManager().merge(mLobby);
 		
-		//mLobby.setStatus(LobbyStatus.IN_PROGRESS);
+		mLobby = getEntityManager().find(Lobby.class, mLobby.getId());
+		mServer = mLobby.getServer();
+		
+		mLobby.setStatus(LobbyStatus.IN_PROGRESS);
 		
 		mPortDAO = new UDPPortDAO(getEntityManager());
 		
 		mServerLogger = ServerLoggerBuilder.newLogger()
 										   .logServer(mLobby.getServer())
 										   .atPort(getAvailablePort())
-										   .withHandler(this)
+										   .withHandler(this)	
 										   .build();
-		
-		//getEntityManager().flush();
+
+		getEntityManager().flush();
 		mServerLogger.startLogging();
 	}
 
@@ -67,6 +71,7 @@ public class SetupServerListenerCMD extends JobCommand implements PacketHandler{
 		if(string.contains("World triggered \"Round_Start\""))
 		{
 			logger.info("MATCH STARTED AT LOBBY "+mLobby.getId());
+			
 			mLobby.setStatus(LobbyStatus.IN_PROGRESS);
 		}
 	}
@@ -75,7 +80,7 @@ public class SetupServerListenerCMD extends JobCommand implements PacketHandler{
 	public boolean isTerminatorPacket(DatagramPacket packet) {
 		String string = new String(packet.getData());
 		string = string.trim();
-		if(string.contains("World triggered \"Game_Over\"")) 
+		if(string.contains("World triggered \"Game_Over\"") || string.contains("sonikro end match")) 
 		{
 			return true;
 		}
@@ -95,20 +100,24 @@ public class SetupServerListenerCMD extends JobCommand implements PacketHandler{
 	}
 	
 	@Override
-	public void onSuccess() {
-		super.onSuccess();
-		try {
-			releasePort();
-			finishLobby();
-		} catch (Exception e) {
-			logger.error("Error finishing lobby "+mLobby.getId(),e);
-		}
-	}
-	
-	@Override
 	public void rollback(Exception exception) {
 		super.rollback(exception);
 		releasePort();
+	}
+	
+	@Override
+	public void onSuccess() {
+		super.onSuccess();
+		releasePort();
+	}
+
+	@Override
+	public void onEndOfConnection() {
+		try {
+			finishLobby();
+		} catch (Exception e) {
+			logger.error("Error Finishing Lobby",e);
+		}
 	}
 
 

@@ -210,13 +210,14 @@ public class LobbyResource extends BaseResource{
 	{
 		Lobby lobby = mLobbyDAO.find(lobbyId);
 		
+		
 		BaseCommand startLobby = cmdBuilder.setCommandClass(StartLobbyCMD.class)
-										   .initializeWith(mLobbyDAO,lobby)
-										   .build();
-		
+				   .initializeWith(mLobbyDAO,lobby)
+				   .build();
 		startLobby.dispatch();
-		
+	
 		startLobby.throwException();
+		
 	}
 	
 	

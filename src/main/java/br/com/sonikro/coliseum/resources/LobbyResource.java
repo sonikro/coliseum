@@ -37,11 +37,13 @@ import br.com.sonikro.coliseum.security.Secure;
 import br.com.sonikro.command.BaseCommand;
 import br.com.sonikro.command.ChainCommand;
 import br.com.sonikro.command.ChainCommandBuilder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Path("lobby") @Secure(authenticator="BASIC_AUTH")
+@Path("lobby") @Secure(authenticator="BASIC_AUTH") @Api
 public class LobbyResource extends BaseResource{
 	
-
+	@ApiOperation(tags="lobby", value="Request a new lobby for the server")
 	@Path("/requestNewLobby")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -79,6 +81,7 @@ public class LobbyResource extends BaseResource{
 		return newLobby;
 	}
 	
+	@ApiOperation(tags="lobby", value="Get specific lobby data")
 	@Path("/{lobbyId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -90,7 +93,7 @@ public class LobbyResource extends BaseResource{
 		return lobby;
 	}
 	
-	
+	@ApiOperation(tags="lobby", value="Add user to Lobby")
 	@Path("/{lobbyId}/addUser/{userId}")
 	@POST
 	@SolvesLobbyStep(step_code="NOT_ENOUGH_PLAYERS")
@@ -107,6 +110,7 @@ public class LobbyResource extends BaseResource{
 		command.throwException();
 	}
 	
+	@ApiOperation(tags="lobby", value="Remove user from lobby")
 	@Path("/{lobbyId}/removeUser/{userId}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -123,6 +127,7 @@ public class LobbyResource extends BaseResource{
 		
 	}
 	
+	@ApiOperation(tags="lobby", value="Find out in which step the Lobby construction is")
 	@Path("/{lobbyId}/getBuildingStep")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -134,6 +139,7 @@ public class LobbyResource extends BaseResource{
 		
 	}
 	
+	@ApiOperation(tags="lobby", value="Inform the server that the specific user is willing to play a specific class")
 	@Path("/{lobbyId}/user/{userId}/addPossibleClass/{gameClassId}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -158,6 +164,7 @@ public class LobbyResource extends BaseResource{
 		return (LobbyUser) addPossibleClass.getResult("lobbyUser");
 	}
 	
+	@ApiOperation(tags="lobby", value="Says that the user is unwilling to play that class")
 	@Path("/{lobbyId}/user/{userId}/removePossibleClass/{gameClassId}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -182,6 +189,7 @@ public class LobbyResource extends BaseResource{
 		return (LobbyUser) addPossibleClass.getResult("lobbyUser");
 	}
 	
+	@ApiOperation(tags="lobby", value="Set Map to be played at the lobby")
 	@SolvesLobbyStep(step_code="SELECT_MAP")
 	@Path("/{lobbyId}/setMap/{mapId}")
 	@POST
@@ -203,6 +211,7 @@ public class LobbyResource extends BaseResource{
 		return lobby;
 	}
 	
+	@ApiOperation(tags="lobby", value="Start Lobby (Setup Server and stuf)")
 	@SolvesLobbyStep(step_code="READY")
 	@Path("/{lobbyId}/start")
 	@POST
@@ -221,7 +230,7 @@ public class LobbyResource extends BaseResource{
 	}
 	
 	
-	
+	@ApiOperation(tags="lobby", value="Get user from lobby")
 	@Path("/{lobbyId}/user/{userId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -234,6 +243,7 @@ public class LobbyResource extends BaseResource{
 		return lobbyUser;
 	}
 	
+	@ApiOperation(tags="lobby", value="List all lobbies")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Lobby> getAllLobby()

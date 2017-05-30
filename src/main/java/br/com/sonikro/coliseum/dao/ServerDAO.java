@@ -25,12 +25,13 @@ public class ServerDAO extends GenericDAO {
 	{
 		Query query = this.manager.createQuery("select s from "+Server.class.getSimpleName()+""
 				+ " s where status = :status"
-				+ "     and number_of_slots >= :number_of_slots", Server.class);
+				+ "     and number_of_slots >= :number_of_slots"
+				+ " order by number_of_slots ASC", Server.class);
 		query.setParameter("status", ServerStatus.AVAILABLE);
 		query.setParameter("number_of_slots", slots_needed);
 		query.setLockMode(LockModeType.NONE);
 		
-		Server server = (Server) query.getSingleResult();
+		Server server = (Server) query.getResultList().get(0);
 		if(server == null)
 		{
 			throw new RuntimeException("No available servers with "+slots_needed+" slots.");

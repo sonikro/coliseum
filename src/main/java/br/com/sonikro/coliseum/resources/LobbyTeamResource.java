@@ -22,8 +22,10 @@ import br.com.sonikro.coliseum.entity.key.LobbyTeamPlayerKey;
 import br.com.sonikro.coliseum.lobbybuilder.SolvesLobbyStep;
 import br.com.sonikro.coliseum.security.Secure;
 import br.com.sonikro.command.BaseCommand;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Path("lobbyTeam") @Secure(authenticator="BASIC_AUTH")
+@Path("lobbyTeam") @Secure(authenticator="BASIC_AUTH") @Api
 public class LobbyTeamResource extends BaseResource {
 	
 	@Inject
@@ -32,6 +34,8 @@ public class LobbyTeamResource extends BaseResource {
 	@Inject
 	private GenericDAO<LobbyTeamPlayer> mLobbyTeamPlayerDAO;
 	
+	
+	@ApiOperation(tags="lobbyTeam", value="Set the leader of a team")
 	@Path("/{lobbyTeamId}/setLeader/{leaderUserId}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +54,7 @@ public class LobbyTeamResource extends BaseResource {
 		
 	}
 	
+	@ApiOperation(tags="lobbyTeam", value="Remove Leader from Team")
 	@Path("/{lobbyTeamId}/removeLeader")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -68,6 +73,7 @@ public class LobbyTeamResource extends BaseResource {
 		
 	}
 	
+	@ApiOperation(tags="lobbyTeam", value="Add player to Team, at specific Class slot")
 	@SolvesLobbyStep(step_code="TEAM_NOT_FULL")
 	@Path("/{lobbyTeamId}/addPlayer/{userId}/class/{gameClassId}")
 	@POST
@@ -91,6 +97,7 @@ public class LobbyTeamResource extends BaseResource {
 		return (LobbyTeamPlayer) addPlayerToTeam.getResult("lobbyTeamPlayer");
 	}
 	
+	@ApiOperation(tags="lobbyTeam", value="Remove player from team")
 	@Path("/{lobbyTeamId}/removePlayer/{userId}")
 	@POST
 	public void removePlayerFromTeam(@PathParam("lobbyTeamId") Long lobbyTeamId,
@@ -112,6 +119,7 @@ public class LobbyTeamResource extends BaseResource {
 	
 	}
 	
+	@ApiOperation(tags="lobbyTeam", value="Set player status at lobby (READY OR NOT)")
 	@SolvesLobbyStep(step_code="PLAYER_READY")
 	@Path("/{lobbyTeamId}/player/{userId}/ready")
 	@POST

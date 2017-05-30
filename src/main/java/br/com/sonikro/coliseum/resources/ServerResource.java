@@ -3,7 +3,6 @@ package br.com.sonikro.coliseum.resources;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,16 +14,18 @@ import javax.ws.rs.core.MediaType;
 
 import br.com.sonikro.coliseum.connections.RCONConnection;
 import br.com.sonikro.coliseum.dao.GenericDAO;
-import br.com.sonikro.coliseum.model.APIResponse;
-import br.com.sonikro.coliseum.security.Secure;
 import br.com.sonikro.coliseum.entity.Map;
 import br.com.sonikro.coliseum.entity.Server;
+import br.com.sonikro.coliseum.security.Secure;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Path("server") @Secure(authenticator="BASIC_AUTH")
+@Path("server") @Secure(authenticator="BASIC_AUTH") @Api
 public class ServerResource {	
 	@Inject
 	private GenericDAO<Server> mServerDAO;;
 	
+	@ApiOperation(tags="server", value="Get specific server data")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{serverId}")
@@ -34,6 +35,7 @@ public class ServerResource {
 		return server;
 	}
 	
+	@ApiOperation(tags="server", value="Get server Staus (RCON)")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/status/{serverId}")
@@ -53,6 +55,7 @@ public class ServerResource {
 		
 	}
 	
+	@ApiOperation(tags="server", value="Add new server")
 	@POST 
 	@Produces(MediaType.APPLICATION_JSON)
 	public Server createServer(Server server)
@@ -61,6 +64,7 @@ public class ServerResource {
 		return server;
 	}
 	
+	@ApiOperation(tags="server", value="Delete Server")
 	@DELETE 
 	@Path("/{serverId}")
 	public void deleteServer(@PathParam("serverId") Long serverId)
@@ -70,6 +74,7 @@ public class ServerResource {
 		mServerDAO.delete(server);
 	}
 	
+	@ApiOperation(tags="server", value="Execute RCON Command at Server")
 	@GET
 	@Path("{serverId}/rcon_command/{rconCommand}")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -89,6 +94,7 @@ public class ServerResource {
 		return result;
 	}
 	
+	@ApiOperation(tags="server", value="Update Server")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public Server updateServer(Server server)
@@ -99,6 +105,7 @@ public class ServerResource {
 	
 	@GET
 	@Path("/{serverId}/maps")
+	@ApiOperation(tags="server", value="List server's maps")
 	public List<Map> getServerMaps(@PathParam("serverId") Long serverId)
 	{
 		Server server = mServerDAO.find(serverId);

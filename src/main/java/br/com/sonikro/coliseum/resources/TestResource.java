@@ -17,16 +17,17 @@ import br.com.sonikro.coliseum.entity.GameClass;
 import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.GameTypeLineup;
 import br.com.sonikro.coliseum.entity.Lobby;
-import br.com.sonikro.coliseum.entity.LobbyTeam;
 import br.com.sonikro.coliseum.entity.Server;
 import br.com.sonikro.coliseum.entity.ServerCFG;
 import br.com.sonikro.coliseum.entity.Tier;
 import br.com.sonikro.coliseum.entity.User;
-import br.com.sonikro.coliseum.enumerators.LobbyStatus;
 import br.com.sonikro.coliseum.enumerators.ServerStatus;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 
 	
-@Path("test")
+@Path("test") @Api
 public class TestResource {
 	@Inject
 	private GenericDAO<APIClient> apiClientDAO;
@@ -45,6 +46,8 @@ public class TestResource {
 	@Inject
 	private GenericDAO<ServerCFG> serverCFGDAO;
 	
+	@ApiOperation(tags="test",value="Check if the webservice endpoint is reacheable")
+	@ApiResponse(code = 200, message = "Sucesso")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String test() {
@@ -54,6 +57,7 @@ public class TestResource {
     
     @GET
     @Path("/exceptionTest")
+    @ApiOperation(tags="test",value="Test random exception format")
     public void exceptionTest() throws Exception
     {
     	throw new Exception("This is a random exception");
@@ -63,6 +67,7 @@ public class TestResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
+    @ApiOperation(tags="test", value = "Create Dummy API Client for tests")
     public APIClient createClient()
     {
     	APIClient client = new APIClient();
@@ -73,6 +78,7 @@ public class TestResource {
     	return client;
     }
     
+    @ApiOperation(tags="test", value="Create Dummy Server for tests")
     @Path("/createServer")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -90,6 +96,7 @@ public class TestResource {
     	return server;
     }
     
+    @ApiOperation(tags="test",value="Create Dummy GameType for tests")
     @Path("/createGameType")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -121,6 +128,7 @@ public class TestResource {
     	return gameType;
     }
     
+    @ApiOperation(tags="test",value="Create Dummy Tier for tests")
     @Path("/createTier")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -134,6 +142,7 @@ public class TestResource {
     	
     }
     
+    @ApiOperation(tags="test", value="Create Dummy CFG for tests")
     @Path("/createCFG")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -146,6 +155,8 @@ public class TestResource {
     	serverCFGDAO.insert(cfg);
     	return cfg;
     }
+    
+    @ApiOperation(tags="test", value="Create Dummy User for tests")
     @Path("/createUser")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -165,6 +176,8 @@ public class TestResource {
     	return user;
     }
     
+    
+    @ApiOperation(tags="test",value="Initialize necessary entities for tests (SHould be called once)")
     @Path("/initializeEntities")
     @POST
     @Transactional

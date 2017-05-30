@@ -12,10 +12,13 @@ import javax.ws.rs.core.MediaType;
 
 import br.com.sonikro.coliseum.entity.Tier;
 import br.com.sonikro.coliseum.security.Secure;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Path("tier") @Secure(authenticator="BASIC_AUTH")
+@Path("tier") @Secure(authenticator="BASIC_AUTH") @Api
 public class TierResource extends BaseResource{
 	
+	@ApiOperation(tags="tier", value="List all available tiers")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Tier> getAllTiers()
@@ -23,6 +26,8 @@ public class TierResource extends BaseResource{
 		return mTierDAO.list();
 	}
 	
+	
+	@ApiOperation(tags="tier", value="Get specific Tier")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{tierId}")
@@ -32,12 +37,14 @@ public class TierResource extends BaseResource{
 	}
 	
 	@POST
+	@ApiOperation(tags="tier", value="Create new tier")
 	public void createTier(Tier tier)
 	{
 		mTierDAO.insert(tier);
 	}
 	
 	@PUT
+	@ApiOperation(tags="tier", value="Update Tier")
 	public void updateTier(Tier tier)
 	{
 		mTierDAO.update(tier);

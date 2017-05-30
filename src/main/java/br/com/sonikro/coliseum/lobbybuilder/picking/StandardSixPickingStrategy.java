@@ -11,14 +11,14 @@ public class StandardSixPickingStrategy implements IPickingStrategy{
 	public LobbyBuilderStep getNextStep(Lobby lobby) {
 		LobbyBuilderStep step = new LobbyBuilderStep();
 		
-		for (LobbyTeam lobbyTeam : lobby.getTeams()) {
-			LobbyTeamPickingStatus status = lobbyTeam.getPickingStatus();
+	/*	for (LobbyTeam lobbyTeam : lobby.getTeams()) {
+
 			if(status.getTurn_to_pick())
 			{
 				step.setDesription("Team "+lobbyTeam.getName()+" should pick now");
 				return step;
 			}
-		}
+		}*/
 			
 		
 		return step;

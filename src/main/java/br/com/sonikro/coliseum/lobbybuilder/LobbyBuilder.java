@@ -1,21 +1,15 @@
 package br.com.sonikro.coliseum.lobbybuilder;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.logging.Logger;
 
-import br.com.sonikro.coliseum.command.lobby.StartLobbyCMD;
 import br.com.sonikro.coliseum.entity.Lobby;
-import br.com.sonikro.coliseum.entity.LobbyTeam;
 import br.com.sonikro.coliseum.lobbybuilder.stepfinders.ILobbyStepFinder;
-import br.com.sonikro.coliseum.lobbybuilder.stepfinders.LobbyReadySF;
 import br.com.sonikro.coliseum.lobbybuilder.stepfinders.LobbyStepFinder;
-import br.com.sonikro.coliseum.lobbybuilder.stepfinders.TeamLeaderSF;
 import br.com.sonikro.coliseum.util.ReflectionTool;
 
 public class LobbyBuilder {

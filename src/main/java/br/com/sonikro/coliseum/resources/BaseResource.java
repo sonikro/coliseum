@@ -3,15 +3,9 @@ package br.com.sonikro.coliseum.resources;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.Entity;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.logging.Logger;
 
 import br.com.sonikro.coliseum.dao.GenericDAO;
+import br.com.sonikro.coliseum.entity.APIClient;
 import br.com.sonikro.coliseum.entity.GameClass;
 import br.com.sonikro.coliseum.entity.GameType;
 import br.com.sonikro.coliseum.entity.Lobby;
@@ -29,8 +24,6 @@ import br.com.sonikro.coliseum.entity.ServerCFG;
 import br.com.sonikro.coliseum.entity.Tier;
 import br.com.sonikro.coliseum.entity.User;
 import br.com.sonikro.coliseum.resources.model.ResourceHelp;
-import br.com.sonikro.coliseum.resources.model.ResourceParameter;
-import br.com.sonikro.coliseum.util.DummyObjectGenerator;
 import br.com.sonikro.coliseum.util.ReflectionTool;
 import br.com.sonikro.command.CommandBuilder;
 import br.com.sonikro.command.ICommand;
@@ -59,6 +52,8 @@ public class BaseResource implements ICommandListener{
 	protected GenericDAO<Map> mMapDAO;
 	@Inject
 	protected GenericDAO<ServerCFG> mServerCFGDAO;
+	@Inject
+	protected GenericDAO<APIClient> mAPIClientDAO;
 	
 	public BaseResource()
 	{
@@ -75,7 +70,7 @@ public class BaseResource implements ICommandListener{
 			command.rollback(e);
 		}
 	}
-	
+	/*
 	@GET
 	@Path("/help")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -101,7 +96,7 @@ public class BaseResource implements ICommandListener{
 		
 		return helpList;
 	}
-
+*/
 	private Parameter[] getMethodParameters(Method method) throws Exception {
 		//ArrayList<Object> methodParameters = new ArrayList<>();
 		//DummyObjectGenerator generator = new DummyObjectGenerator();

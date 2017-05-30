@@ -45,16 +45,8 @@ public class LobbyTeam implements Serializable{
 	//@JoinColumn(name="lobby_team_id",insertable=true,updatable=false)
 	private List<LobbyTeamPlayer> players = new ArrayList<LobbyTeamPlayer>();
 	
-	@OneToOne(mappedBy="lobbyTeam")
-	private LobbyTeamPickingStatus pickingStatus;
 	
-	
-	public LobbyTeamPickingStatus getPickingStatus() {
-		return pickingStatus;
-	}
-	public void setPickingStatus(LobbyTeamPickingStatus pickingStatus) {
-		this.pickingStatus = pickingStatus;
-	}
+
 	public String getName() {
 		return name;
 	}

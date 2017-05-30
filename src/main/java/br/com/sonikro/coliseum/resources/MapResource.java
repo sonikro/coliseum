@@ -13,11 +13,14 @@ import javax.ws.rs.core.MediaType;
 
 import br.com.sonikro.coliseum.entity.Map;
 import br.com.sonikro.coliseum.security.Secure;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-
-@Path("map") @Secure(authenticator="BASIC_AUTH")
+ 
+@Path("map") @Secure(authenticator="BASIC_AUTH") @Api
 public class MapResource extends BaseResource{
 	
+	@ApiOperation(tags="map", value="Insert new Map")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map createMap(Map map)
@@ -26,6 +29,7 @@ public class MapResource extends BaseResource{
 		return map;
 	}
 	
+	@ApiOperation(tags="map", value="Update existing map")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map updateMap(Map map)
@@ -34,6 +38,7 @@ public class MapResource extends BaseResource{
 		return map;
 	}
 	
+	@ApiOperation(tags="map", value="Delete Map")
 	@DELETE
 	@Path("/{mapId}")
 	public void deleteMap(@PathParam("mapId") Long mapId)
@@ -42,6 +47,7 @@ public class MapResource extends BaseResource{
 		mMapDAO.delete(map);
 	}
 	
+	@ApiOperation(tags="map", value="Get specific map")
 	@GET
 	@Path("/{mapId}")
 	public Map getMap(@PathParam("mapId") Long mapId)
@@ -49,6 +55,7 @@ public class MapResource extends BaseResource{
 		return mMapDAO.find(mapId);
 	}
 	
+	@ApiOperation(tags="map", value="List all maps")
 	@GET
 	public List<Map> getAllMaps()
 	{

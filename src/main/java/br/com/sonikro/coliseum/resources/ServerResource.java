@@ -25,6 +25,15 @@ public class ServerResource {
 	@Inject
 	private GenericDAO<Server> mServerDAO;;
 	
+	@ApiOperation(tags="server", value="List all servers")
+	@GET
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Server> getAllServers()
+	{
+		return mServerDAO.list();
+	}
+	
 	@ApiOperation(tags="server", value="Get specific server data")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -76,7 +85,7 @@ public class ServerResource {
 	
 	@ApiOperation(tags="server", value="Execute RCON Command at Server")
 	@GET
-	@Path("{serverId}/rcon_command/{rconCommand}")
+	@Path("/{serverId}/rcon_command/{rconCommand}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String executeRconCommand(@PathParam("serverId") Long serverId,
 										@PathParam("rconCommand") String command) throws Exception
